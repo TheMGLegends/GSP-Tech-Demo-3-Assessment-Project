@@ -19,8 +19,8 @@ Gameplay Systems Programming 3nd Tech Demo (2D Mobile RPG Combat System)
 10. Enemy
 
 # Requirement Specifications:
-![image](https://github.com/TheMGLegends/GSP-Tech-Demo-3-Assessment-Project/assets/120389432/5329ceb1-820a-40f0-b73d-80a23d2e131e)
-![image](https://github.com/TheMGLegends/GSP-Tech-Demo-3-Assessment-Project/assets/120389432/2e573973-3738-4bfa-b3b5-07e20dd9652b)
-![image](https://github.com/TheMGLegends/GSP-Tech-Demo-3-Assessment-Project/assets/120389432/4b4180ea-fbd7-4f08-bc6d-0af3bbc2de36)
-![image](https://github.com/TheMGLegends/GSP-Tech-Demo-3-Assessment-Project/assets/120389432/da1ee893-1593-44b0-b144-da7c6a4f1346)
-![image](https://github.com/TheMGLegends/GSP-Tech-Demo-3-Assessment-Project/assets/120389432/8f4931a4-e09c-4967-8b87-202bc832e1f3)
+![image](https://github.com/TheMGLegends/GSP-Tech-Demo-3-Assessment-Project/assets/120389432/f6140077-90a5-4d3b-8f40-c6e5b07f909d)
+![image](https://github.com/TheMGLegends/GSP-Tech-Demo-3-Assessment-Project/assets/120389432/64a3babb-3b0e-40c3-a9c7-de0db9e0bdfd)
+![image](https://github.com/TheMGLegends/GSP-Tech-Demo-3-Assessment-Project/assets/120389432/73a07af6-fdd0-4a65-b9a9-e4787db0a580)
+![image](https://github.com/TheMGLegends/GSP-Tech-Demo-3-Assessment-Project/assets/120389432/fd6ee4e8-ecff-4248-b310-0138261dd89b)
+![image](https://github.com/TheMGLegends/GSP-Tech-Demo-3-Assessment-Project/assets/120389432/c1ab0dc5-2168-434e-bfd2-3fb402a9bb29)
