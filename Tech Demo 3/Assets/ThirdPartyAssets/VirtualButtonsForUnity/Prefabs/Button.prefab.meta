@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 275b280c081e3406c94cdb832d875a59
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 200159
+  packageName: Virtual Buttons for Unity
+  packageVersion: 1.0.0
+  assetPath: Assets/VirtualButtonsForUnity/VirtualButtonsForUnity/Prefabs/Button.prefab
+  uploadId: 445799

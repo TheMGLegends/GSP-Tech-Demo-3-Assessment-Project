@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 032428d81191245d4ae5a23a0a301ae9
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 200159
+  packageName: Virtual Buttons for Unity
+  packageVersion: 1.0.0
+  assetPath: Assets/VirtualButtonsForUnity/VirtualButtonsForUnity/Prefabs/Joystick
+    Fixed.prefab
+  uploadId: 445799

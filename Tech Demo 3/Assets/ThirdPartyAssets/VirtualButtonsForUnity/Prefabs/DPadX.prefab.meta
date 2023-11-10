@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0b46c1cd07c060da091ca275d48193ff
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 200159
+  packageName: Virtual Buttons for Unity
+  packageVersion: 1.0.0
+  assetPath: Assets/VirtualButtonsForUnity/VirtualButtonsForUnity/Prefabs/DPadX.prefab
+  uploadId: 445799
