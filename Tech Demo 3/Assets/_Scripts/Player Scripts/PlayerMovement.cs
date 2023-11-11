@@ -7,14 +7,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float movementSpeed;
 
     private Rigidbody2D rb2D;
-    private bool isFacingRight;
 
-    Vector2 movementInput;
+    private Vector2 movementInput;
 
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
-        isFacingRight = true;
     }
 
     private void Update()
@@ -37,5 +35,10 @@ public class PlayerMovement : MonoBehaviour
         {
             movementInput = ReferenceManager.Instance.joystickController.GetJoystickInput();
         }
+    }
+
+    public Vector2 GetMovementInput()
+    {
+        return movementInput;
     }
 }
