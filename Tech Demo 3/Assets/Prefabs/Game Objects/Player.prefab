@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5197853963825840138}
   - component: {fileID: 2454709530388744698}
   - component: {fileID: 7311854128855252930}
+  - component: {fileID: 5689631174871886309}
   - component: {fileID: 8164765634720462146}
   m_Layer: 0
   m_Name: Player
@@ -77,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 4fb1d4201b502e54a95407eeaac4db88, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -197,6 +198,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 2.5
+--- !u!114 &5689631174871886309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3571605629607790957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547f5645465a3ef439f4680ec84d05dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8164765634720462146
 MonoBehaviour:
   m_ObjectHideFlags: 0

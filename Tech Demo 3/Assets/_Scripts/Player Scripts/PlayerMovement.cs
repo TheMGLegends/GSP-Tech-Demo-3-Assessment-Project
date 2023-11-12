@@ -28,8 +28,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void GetInputAxis()
     {
+#if UNITY_EDITOR
         movementInput.x = Input.GetAxisRaw("Horizontal");
         movementInput.y = Input.GetAxisRaw("Vertical");
+#endif
 
         if (ReferenceManager.Instance.joystickController.GetJoystickInput() != Vector2.zero)
         {
