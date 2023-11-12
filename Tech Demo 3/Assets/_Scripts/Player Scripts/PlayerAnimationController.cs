@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAnimationController : MonoBehaviour
@@ -15,13 +16,13 @@ public class PlayerAnimationController : MonoBehaviour
     private string currentState;
 
     private PlayerMovement playerMovement;
-    private bool isFacingRight;
+    private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
-        isFacingRight = true;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -44,15 +45,13 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void SetFacingDirection(float facingDirection)
     {
-        if (!isFacingRight && facingDirection > 0)
+        if (facingDirection != 0 && facingDirection < 0)
         {
-            isFacingRight = true;
-            transform.localScale *= new Vector2(-1, 1);
+            spriteRenderer.flipX = true;
         }
-        else if (isFacingRight && facingDirection < 0)
+        else if (facingDirection != 0 && facingDirection > 0)
         {
-            isFacingRight = false;
-            transform.localScale *= new Vector2(-1, 1);
+            spriteRenderer.flipX = false;
         }
     }
 
