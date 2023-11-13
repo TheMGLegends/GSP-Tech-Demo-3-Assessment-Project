@@ -16,31 +16,31 @@ public class PlayerAnimationController : MonoBehaviour
     private Animator animator;
     private string currentState;
 
-    private PlayerMovement playerMovement;
-    private PlayerActions playerActions;
+    private PlayerController playerController;
     private SpriteRenderer spriteRenderer;
 
     private Vector2 movementInput;
-    private GameObject target;
+
     private bool hasTarget;
+    private GameObject target;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        playerMovement = GetComponent<PlayerMovement>();
-        playerActions = GetComponent<PlayerActions>();
+        playerController = GetComponent<PlayerController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
     {
-        movementInput = playerMovement.GetMovementInput();
+        movementInput = playerController.GetMovementInput();
 
-        if (!playerActions.IsTargeting())
+        if (!playerController.GetIsTargeting())
         {
             if (hasTarget)
             {
                 hasTarget = false;
+                target = null;
             }
 
             if (movementInput != Vector2.zero)
@@ -53,72 +53,55 @@ public class PlayerAnimationController : MonoBehaviour
         {
             if (!hasTarget)
             {
+                target = playerController.GetTarget();
                 hasTarget = true;
-                target = playerActions.GetTarget();
             }
 
             if (target != null)
-            {
                 TargetSystem(target.transform, movementInput);
-            }
         }
 
         if (movementInput != Vector2.zero)
-        {
             ChangeAnimationState(WALK);
-        }
         else
-        {
             ChangeAnimationState(IDLE);
-        }
     }
 
-    private void SetFacingDirection(float facingDirection)
-    {
-        if (facingDirection != 0 && facingDirection < 0)
-        {
-            spriteRenderer.flipX = true;
-        }
-        else if (facingDirection != 0 && facingDirection > 0)
-        {
-            spriteRenderer.flipX = false;
-        }
-    }
 
     private void TargetSystem(Transform target, Vector2 movementInput)
     {
         // Above Enemy:
         if (transform.position.y > target.position.y)
-        {
             movementInput.y = -1;
-        }
+
         // Below Enemy:
         else if (transform.position.y < target.position.y)
-        {
             movementInput.y = 1;
-        }
 
         // Left of Enemy:
         if (transform.position.x < target.position.x)
-        {
             movementInput.x = 1;
-        }
+
         //Right of Enemy:
         if (transform.position.x > target.position.x)
-        {
             movementInput.x = -1;
-        }
 
         SetFacingDirection(movementInput.x);
         animator.SetFloat("MovementY", movementInput.y);
     }
 
+    private void SetFacingDirection(float facingDirection)
+    {
+        if (facingDirection != 0 && facingDirection < 0) 
+            spriteRenderer.flipX = true;
+        else if (facingDirection != 0 && facingDirection > 0) 
+            spriteRenderer.flipX = false;
+    }
+
     private void ChangeAnimationState(string newState)
     {
         if (currentState == newState)
-        {
             return;
-        }
         else
         {
             animator.Play(newState);
@@ -128,14 +111,9 @@ public class PlayerAnimationController : MonoBehaviour
 
     private bool IsAnimationPlaying(string state)
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName(state)
-            && animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-        {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName(state) && animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)      
             return true;
-        }
         else
-        {
             return false;
-        }
     }
 }
