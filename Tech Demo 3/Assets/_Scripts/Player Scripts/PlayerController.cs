@@ -10,12 +10,11 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb2D;
 
     private Vector2 movementInput;
-    public Vector2 GetMovementInput() => movementInput;
-
     private bool isTargeting;
-    public bool GetIsTargeting() => isTargeting;
-
     private GameObject target;
+
+    public Vector2 GetMovementInput() => movementInput;
+    public bool GetIsTargeting() => isTargeting;
     public GameObject GetTarget() => target;
 
     private void Start()
