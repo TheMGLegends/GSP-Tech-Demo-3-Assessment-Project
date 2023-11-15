@@ -65,16 +65,11 @@ public class PlayerController : MonoBehaviour
             {
                 target = hit.collider.gameObject;
                 isTargeting = true;
-
-                Debug.Log(target.name);
-                Debug.Log(isTargeting);
             }
             else if (hit.collider.CompareTag("Ground"))
             {
                 target = null;
                 isTargeting = false;
-
-                Debug.Log(isTargeting);
             }
         }
     }
@@ -85,8 +80,6 @@ public class PlayerController : MonoBehaviour
         movementInput.x = Input.GetAxisRaw("Horizontal");
         movementInput.y = Input.GetAxisRaw("Vertical");
 #endif
-
-        if (ReferenceManager.Instance.joystickController.GetJoystickInput() != Vector2.zero)
-            movementInput = ReferenceManager.Instance.joystickController.GetJoystickInput();
+        movementInput = ReferenceManager.Instance.joystickController.GetJoystickInput();
     }
 }

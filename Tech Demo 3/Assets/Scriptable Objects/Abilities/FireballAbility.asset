@@ -16,4 +16,4 @@ MonoBehaviour:
   castingTime: 3
   basePower: 35
   cooldown: 0
-  statusEffect: {fileID: 0}
+  statusEffect: {fileID: 11400000, guid: 6c0ba51a0796030438ddec4b4937a645, type: 2}

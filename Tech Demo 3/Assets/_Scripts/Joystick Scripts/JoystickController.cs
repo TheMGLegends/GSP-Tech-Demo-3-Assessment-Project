@@ -24,6 +24,7 @@ public class JoystickController : MonoBehaviour, IDragHandler, IPointerDownHandl
     {
         if (returnJoystick)
         {
+            joystickInput = Vector2.zero;
             joystickHandle.rectTransform.anchoredPosition = Vector2.Lerp(joystickHandle.rectTransform.anchoredPosition, Vector2.zero, returnSmoothing);
         }
     }
