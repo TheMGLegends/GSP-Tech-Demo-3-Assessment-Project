@@ -532,12 +532,12 @@ GameObject:
   - component: {fileID: 8198047006059267115}
   - component: {fileID: 7459045619789518470}
   m_Layer: 0
-  m_Name: Unusable
+  m_Name: OutsideRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2836142761004735028
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3496,7 +3496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25c9e7884309c894aba7f98a01858569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unusableObject: {fileID: 1867908932921344146}
+  outsideRangeImage: {fileID: 7459045619789518470}
 --- !u!1 &6884416672084506626
 GameObject:
   m_ObjectHideFlags: 0

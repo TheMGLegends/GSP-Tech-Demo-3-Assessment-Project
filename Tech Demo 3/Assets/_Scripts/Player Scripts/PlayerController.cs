@@ -117,13 +117,13 @@ public class PlayerController : MonoBehaviour
             }
             else if ((hit.collider.CompareTag("Enemy") && target != null) || (hit.collider.CompareTag("Ground") && target != null))
             {
-                if (meleeAttackController.GetIsMeleeOn())
-                    meleeAttackController.ToggleButton();
-
                 meleeAttackController.gameObject.SetActive(false);
                 target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(false);
                 target = null;
             }
+
+            if (meleeAttackController.GetIsMeleeOn())
+                meleeAttackController.ToggleButton();
         }
     }
 
@@ -134,7 +134,7 @@ public class PlayerController : MonoBehaviour
             if (!canAttack)
             {
                 canAttack = true;
-                meleeAttackController.EnableMeleeAttack();
+                meleeAttackController.IsOutsideRangeImageActive(false);
             }
         }
         else
@@ -142,23 +142,13 @@ public class PlayerController : MonoBehaviour
             if (canAttack)
             {
                 canAttack = false;
-                meleeAttackController.DisableMeleeAttack();
+                meleeAttackController.IsOutsideRangeImageActive(true);
             }
         }
 
         if (canAttack && meleeAttackController.GetIsMeleeOn())
-        {
-            Debug.Log("attacking");
-        }
+            Debug.Log("Attacking");
     }
-
-    //private void Attack()
-    //{
-    //    if (canAttack && meleeAttackController.GetIsMeleeOn())
-    //    {
-    //        Debug.Log("attacking");
-    //    }
-    //}
 
     private void GetInputAxis()
     {

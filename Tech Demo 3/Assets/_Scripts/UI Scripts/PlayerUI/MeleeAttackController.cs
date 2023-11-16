@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MeleeAttackController : MonoBehaviour
 {
-    [SerializeField] private GameObject unusableObject;
+    [SerializeField] private Image outsideRangeImage;
     private Button meleeButton;
 
     private Image buttonImage;
@@ -14,13 +14,12 @@ public class MeleeAttackController : MonoBehaviour
     private bool isMeleeOn;
 
     public bool GetIsMeleeOn() => isMeleeOn;
+    public void IsOutsideRangeImageActive(bool isActive) { outsideRangeImage.enabled = isActive; }
 
     private void Start()
     {
         meleeButton = GetComponent<Button>();
-
-        meleeButton.interactable = false;
-        unusableObject.SetActive(true);
+        outsideRangeImage.enabled = true;
 
         buttonImage = GetComponent<Image>();
         defaultColor = buttonImage.color;
@@ -29,35 +28,29 @@ public class MeleeAttackController : MonoBehaviour
         gameObject.SetActive(false);
     }
     
-    public void EnableMeleeAttack()
-    {
-        unusableObject.SetActive(false);
-        meleeButton.interactable = true;
-
-        if (isMeleeOn)
-            buttonImage.color = activeColor;
-    }
-
-    public void DisableMeleeAttack()
-    {
-        meleeButton.interactable = false;
-        unusableObject.SetActive(true);
-        
-        if (isMeleeOn)
-            buttonImage.color = defaultColor;
-    }
+    //public void EnableMeleeAttack()
+    //{
+    //    unusableObject.SetActive(false);
+    //}
+    //
+    //public void DisableMeleeAttack()
+    //{
+    //    unusableObject.SetActive(true);
+    //}
 
     public void ToggleButton()
     {
         if (!isMeleeOn)
         {
-            buttonImage.color = activeColor;
+            //buttonImage.color = activeColor;
             isMeleeOn = true;
+            buttonImage.color = activeColor;
         }
         else
         {
-            buttonImage.color = defaultColor;
+            //buttonImage.color = defaultColor;
             isMeleeOn = false;
+            buttonImage.color = defaultColor;
         }
     }
 }
