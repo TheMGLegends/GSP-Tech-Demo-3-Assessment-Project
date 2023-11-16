@@ -10,11 +10,10 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb2D;
 
     private Vector2 movementInput;
-    private bool isTargeting;
     private GameObject target;
+    private bool isTargeting;
 
     public Vector2 GetMovementInput() => movementInput;
-    public bool GetIsTargeting() => isTargeting;
     public GameObject GetTarget() => target;
 
     private void Start()
@@ -66,7 +65,7 @@ public class PlayerController : MonoBehaviour
                 target = hit.collider.gameObject;
                 isTargeting = true;
             }
-            else if (hit.collider.CompareTag("Ground"))
+            else if ((hit.collider.CompareTag("Enemy") && isTargeting) || hit.collider.CompareTag("Ground"))
             {
                 target = null;
                 isTargeting = false;
@@ -80,6 +79,10 @@ public class PlayerController : MonoBehaviour
         movementInput.x = Input.GetAxisRaw("Horizontal");
         movementInput.y = Input.GetAxisRaw("Vertical");
 #endif
-        movementInput = ReferenceManager.Instance.joystickController.GetJoystickInput();
+        
+        if (ReferenceManager.Instance.joystickController.GetJoystickInput() != Vector2.zero)
+        {
+            movementInput = ReferenceManager.Instance.joystickController.GetJoystickInput();
+        }
     }
 }

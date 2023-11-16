@@ -21,7 +21,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     private Vector2 movementInput;
 
-    private bool hasTarget;
+    //private bool hasTarget;
     private GameObject target;
 
     private void Start()
@@ -35,14 +35,13 @@ public class PlayerAnimationController : MonoBehaviour
     {
         movementInput = playerController.GetMovementInput();
 
-        if (!playerController.GetIsTargeting())
+        if (target != playerController.GetTarget())
         {
-            if (hasTarget)
-            {
-                hasTarget = false;
-                target = null;
-            }
+            target = playerController.GetTarget();
+        }
 
+        if (target == null)
+        {
             if (movementInput != Vector2.zero)
             {
                 SetFacingDirection(movementInput.x);
@@ -51,14 +50,7 @@ public class PlayerAnimationController : MonoBehaviour
         }
         else
         {
-            if (!hasTarget)
-            {
-                target = playerController.GetTarget();
-                hasTarget = true;
-            }
-
-            if (target != null)
-                TargetSystem(target.transform, movementInput);
+            TargetSystem(target.transform, movementInput);
         }
 
         if (movementInput != Vector2.zero)

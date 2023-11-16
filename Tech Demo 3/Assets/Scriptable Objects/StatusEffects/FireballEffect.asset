@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a5bdb6fc31e3ef45a470d989044e8dc, type: 3}
   m_Name: FireballEffect
   m_EditorClassIdentifier: 
+  statusEffectType: 1
+  image: {fileID: 21300000, guid: 9a6736aa4b7149643b08a2890df2c69e, type: 3}
   duration: 15
   isDebuff: 1
-  characterTag: Enemy
-  statusEffectName: FireballDebuff
-  image: {fileID: 21300000, guid: 9a6736aa4b7149643b08a2890df2c69e, type: 3}
+  isStackable: 0

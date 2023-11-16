@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5467ce58cba7c84fbb24f8e9ed2e1c6, type: 3}
   m_Name: ToxicSpitAbility
   m_EditorClassIdentifier: 
+  abilityType: 4
   manaCost: 0
   castingTime: 2.5
   basePower: 0

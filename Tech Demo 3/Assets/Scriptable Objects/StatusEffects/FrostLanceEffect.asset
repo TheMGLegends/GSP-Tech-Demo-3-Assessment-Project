@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a5bdb6fc31e3ef45a470d989044e8dc, type: 3}
   m_Name: FrostLanceEffect
   m_EditorClassIdentifier: 
+  statusEffectType: 2
+  image: {fileID: 21300000, guid: 50ea6e1b9b482d04387856a3b120aea9, type: 3}
   duration: 5
   isDebuff: 1
   isStackable: 1
-  characterTag: Enemy
-  statusEffectName: FrostLanceDebuff
-  image: {fileID: 21300000, guid: 50ea6e1b9b482d04387856a3b120aea9, type: 3}

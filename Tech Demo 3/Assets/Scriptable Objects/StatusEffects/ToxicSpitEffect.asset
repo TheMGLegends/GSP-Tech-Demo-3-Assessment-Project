@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a5bdb6fc31e3ef45a470d989044e8dc, type: 3}
   m_Name: ToxicSpitEffect
   m_EditorClassIdentifier: 
+  statusEffectType: 4
+  image: {fileID: 21300000, guid: 872d66caab17fad4dae19d97ae2296c0, type: 3}
   duration: 20
   isDebuff: 1
   isStackable: 0
-  characterTag: Player
-  statusEffectName: ToxicSpitDebuff
-  image: {fileID: 21300000, guid: 872d66caab17fad4dae19d97ae2296c0, type: 3}

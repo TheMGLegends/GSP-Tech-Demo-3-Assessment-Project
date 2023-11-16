@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5467ce58cba7c84fbb24f8e9ed2e1c6, type: 3}
   m_Name: MageArmorAbility
   m_EditorClassIdentifier: 
+  abilityType: 3
   manaCost: 200
   castingTime: 0
   basePower: 0
