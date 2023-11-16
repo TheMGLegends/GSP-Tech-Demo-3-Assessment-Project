@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,6 +10,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterStatsSO characterStats;
     [SerializeField] private JoystickController joystickController;
     [SerializeField] private PlayerHUDController playerHUDController;
+    [SerializeField] private MeleeAttackController meleeAttackController;
+
+    [SerializeField] private float meleeAttackRadius;
+    [SerializeField] private LayerMask touchableMasks;
 
     // INFO: Character Stats Variables:
     private float health;
@@ -19,16 +24,25 @@ public class PlayerController : MonoBehaviour
     private float damageAmount;
     private float meleeAttackSpeed;
 
-    // INFO: Movement Variables/Components
+    // INFO: Movement Variables/Components:
     private Rigidbody2D rb2D;
     private Vector2 movementInput;
 
-    // INFO: Targetting System Variables/Components
+    // INFO: Targetting System Variables/Components:
     private GameObject target;
-    private bool isTargeting;
+
+    // INFO: Meleeing System Variables/Components:
+    private CircleCollider2D meleeAttackRange;
+    private bool canAttack;
 
     public Vector2 GetMovementInput() => movementInput;
     public GameObject GetTarget() => target;
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, meleeAttackRadius);
+    }
 
     private void Awake()
     {
@@ -38,7 +52,10 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
+        meleeAttackRange = GetComponentInChildren<CircleCollider2D>();
+        meleeAttackRange.radius = meleeAttackRadius;
     }
+
 
     private void Update()
     {
@@ -56,6 +73,7 @@ public class PlayerController : MonoBehaviour
 
         GetInputAxis();
         TargetAction();
+        MeleeAction();
     }
 
     private void FixedUpdate()
@@ -87,22 +105,60 @@ public class PlayerController : MonoBehaviour
 
     private void LockOn(Vector3 touchPosition)
     {
-        RaycastHit2D hit = Physics2D.Raycast(touchPosition, Vector2.zero);
+        RaycastHit2D hit = Physics2D.Raycast(touchPosition, Vector2.zero, Mathf.Infinity, touchableMasks);
 
         if (hit != false && hit.collider != null)
         {
             if (hit.collider.CompareTag("Enemy"))
             {
                 target = hit.collider.gameObject;
-                isTargeting = true;
+                target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(true);
+                meleeAttackController.gameObject.SetActive(true);
             }
-            else if ((hit.collider.CompareTag("Enemy") && isTargeting) || hit.collider.CompareTag("Ground"))
+            else if ((hit.collider.CompareTag("Enemy") && target != null) || (hit.collider.CompareTag("Ground") && target != null))
             {
+                if (meleeAttackController.GetIsMeleeOn())
+                    meleeAttackController.ToggleButton();
+
+                meleeAttackController.gameObject.SetActive(false);
+                target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(false);
                 target = null;
-                isTargeting = false;
             }
         }
     }
+
+    private void MeleeAction()
+    {
+        if (target != null && Vector2.Distance(transform.position, target.transform.position) < meleeAttackRadius)
+        {
+            if (!canAttack)
+            {
+                canAttack = true;
+                meleeAttackController.EnableMeleeAttack();
+            }
+        }
+        else
+        {
+            if (canAttack)
+            {
+                canAttack = false;
+                meleeAttackController.DisableMeleeAttack();
+            }
+        }
+
+        if (canAttack && meleeAttackController.GetIsMeleeOn())
+        {
+            Debug.Log("attacking");
+        }
+    }
+
+    //private void Attack()
+    //{
+    //    if (canAttack && meleeAttackController.GetIsMeleeOn())
+    //    {
+    //        Debug.Log("attacking");
+    //    }
+    //}
 
     private void GetInputAxis()
     {
