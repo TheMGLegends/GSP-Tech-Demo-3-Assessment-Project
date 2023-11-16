@@ -313,6 +313,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &363324423 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2110403204987792986, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+  m_PrefabInstance: {fileID: 8381820536548293519}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &363324425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363324423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8166168b35dcaa4db615d40bba83bc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthSlider: {fileID: 781862227}
+  manaSlider: {fileID: 638881562}
+  healthText: {fileID: 383316719}
+  manaText: {fileID: 1800756348}
+--- !u!114 &383316719 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3330214451364581191, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+  m_PrefabInstance: {fileID: 8381820536548293519}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &384250906
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,6 +720,17 @@ Transform:
   - {fileID: 519420032}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &638881562 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3031923863779543180, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+  m_PrefabInstance: {fileID: 8381820536548293519}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &682412209
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,6 +763,17 @@ Transform:
   - {fileID: 566412784}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &781862227 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8553466517440968888, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+  m_PrefabInstance: {fileID: 8381820536548293519}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &950001362 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7170981915919821169, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
@@ -930,6 +984,17 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &1800756348 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4126795026243187284, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+  m_PrefabInstance: {fileID: 8381820536548293519}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1874183668
 GameObject:
   m_ObjectHideFlags: 0
@@ -1074,7 +1139,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerObject: {fileID: 538918582}
-  joystickController: {fileID: 950001362}
 --- !u!1 &2120722792
 GameObject:
   m_ObjectHideFlags: 0
@@ -1159,10 +1223,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5002435853797119110, guid: 4ed39bb511349c14e89f733599231f30, type: 3}
-      propertyPath: m_FlipX
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 7311854128855252930, guid: 4ed39bb511349c14e89f733599231f30, type: 3}
+      propertyPath: characterStats
+      value: 
+      objectReference: {fileID: 11400000, guid: 4fe582df17757ad4fb92c32f795d1cb2, type: 2}
+    - target: {fileID: 7311854128855252930, guid: 4ed39bb511349c14e89f733599231f30, type: 3}
+      propertyPath: joystickController
+      value: 
+      objectReference: {fileID: 950001362}
+    - target: {fileID: 7311854128855252930, guid: 4ed39bb511349c14e89f733599231f30, type: 3}
+      propertyPath: playerHUDController
+      value: 
+      objectReference: {fileID: 363324425}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1532,6 +1604,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8553466517440968888, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8655881209940075887, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1554,6 +1630,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8655881209940075887, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770024488537296641, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9031101116356914789, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9104329819649878502, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
@@ -1583,7 +1667,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2110403204987792986, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 363324425}
   m_SourcePrefab: {fileID: 100100000, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

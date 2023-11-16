@@ -15,7 +15,7 @@ MonoBehaviour:
   baseHealth: 500
   baseMana: 960
   baseMovementSpeed: 2.5
-  baseAttackSpeed: 2
-  baseDamage: 18
   baseDefenseMultiplier: 0.9
   baseManaRegen: 12
+  normalDamageAmount: 18
+  normalAttackSpeed: 2

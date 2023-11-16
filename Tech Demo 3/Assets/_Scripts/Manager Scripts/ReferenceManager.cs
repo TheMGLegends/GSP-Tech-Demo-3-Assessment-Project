@@ -7,7 +7,6 @@ public class ReferenceManager : MonoBehaviour
     public static ReferenceManager Instance { get; private set; }
 
     public GameObject playerObject;
-    public JoystickController joystickController;
 
     private void Awake()
     {

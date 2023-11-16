@@ -3,18 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float movementSpeed;
+    [SerializeField] private CharacterStatsSO characterStats;
+    [SerializeField] private JoystickController joystickController;
+    [SerializeField] private PlayerHUDController playerHUDController;
 
+    // INFO: Character Stats Variables:
+    private float health;
+    private float mana;
+    private float movementSpeed;
+    private float defenseMultiplier;
+    private float manaRegen;
+    private float damageAmount;
+    private float meleeAttackSpeed;
+
+    // INFO: Movement Variables/Components
     private Rigidbody2D rb2D;
-
     private Vector2 movementInput;
+
+    // INFO: Targetting System Variables/Components
     private GameObject target;
     private bool isTargeting;
 
     public Vector2 GetMovementInput() => movementInput;
     public GameObject GetTarget() => target;
+
+    private void Awake()
+    {
+        InitializeStats();
+    }
 
     private void Start()
     {
@@ -23,6 +42,18 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        // TESTING:
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            health -= 10;
+            mana -= 15;
+            Debug.Log(health);
+            Debug.Log(mana);
+            playerHUDController.SetHealth(health);
+            playerHUDController.SetMana(mana);
+        }
+        // TESTING:
+
         GetInputAxis();
         TargetAction();
     }
@@ -80,9 +111,20 @@ public class PlayerController : MonoBehaviour
         movementInput.y = Input.GetAxisRaw("Vertical");
 #endif
         
-        if (ReferenceManager.Instance.joystickController.GetJoystickInput() != Vector2.zero)
-        {
-            movementInput = ReferenceManager.Instance.joystickController.GetJoystickInput();
-        }
+        if (joystickController.GetJoystickInput() != Vector2.zero)
+            movementInput = joystickController.GetJoystickInput();
+    }
+
+    private void InitializeStats()
+    {
+        health = characterStats.GetBaseHealth();
+        mana = characterStats.GetBaseMana();
+        movementSpeed = characterStats.GetBaseMovementSpeed();
+        defenseMultiplier = characterStats.GetBaseDefenseMultiplier();
+        manaRegen = characterStats.GetBaseManaRegen();
+        damageAmount = characterStats.GetNormalDamage();
+        meleeAttackSpeed = characterStats.GetNormalAttackSpeed();
+
+        playerHUDController.InitializeBars(health, mana);
     }
 }
