@@ -201,6 +201,7 @@ MonoBehaviour:
   joystickController: {fileID: 0}
   playerHUDController: {fileID: 0}
   meleeAttackController: {fileID: 0}
+  abilitiesController: {fileID: 0}
   meleeAttackRadius: 3
   touchableMasks:
     serializedVersion: 2
@@ -217,6 +218,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0646ebd8345a13b42b409da4e7341179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationStatesList: 000000000100000002000000030000000400000005000000
+  animationStringsList:
+  - Idle
+  - Walk
+  - Melee_Ready
+  - Melee_Swing
+  - Cast
+  - Dead
 --- !u!1 &5331467399753637779
 GameObject:
   m_ObjectHideFlags: 0

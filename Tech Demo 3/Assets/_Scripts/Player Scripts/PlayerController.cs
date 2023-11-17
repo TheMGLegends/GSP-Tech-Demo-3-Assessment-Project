@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private float defenseMultiplier;
     private float manaRegen;
     private float damageAmount;
-    private float meleeAttackSpeed;
+    private float meleeAttackInterval;
 
     // INFO: Movement Variables/Components:
     private Rigidbody2D rb2D;
@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     // INFO: Meleeing System Variables/Components:
     private CircleCollider2D meleeAttackRange;
     private bool canAttack;
+    private float currentMeleeTime;
 
     public Vector2 GetMovementInput() => movementInput;
     public GameObject GetTarget() => target;
@@ -67,7 +68,7 @@ public class PlayerController : MonoBehaviour
             playerHUDController.SetHealth(health);
             playerHUDController.SetMana(mana);
         }
-        // TESTING:
+
 
         GetInputAxis();
         TargetAuthentication();
@@ -117,7 +118,7 @@ public class PlayerController : MonoBehaviour
             if (hit.collider.CompareTag("Enemy"))
             {
                 target = hit.collider.gameObject;
-                target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(true);
+                target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(true, target);
                 meleeAttackController.gameObject.SetActive(true);
                 abilitiesController.ActivateCastingUI(true);
             }
@@ -125,7 +126,7 @@ public class PlayerController : MonoBehaviour
             {
                 abilitiesController.ActivateCastingUI(false);
                 meleeAttackController.gameObject.SetActive(false);
-                target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(false);
+                target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(false, null);
                 target = null;
             }
 
@@ -146,6 +147,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if (currentMeleeTime != 0)
+                currentMeleeTime = 0;
+
             if (canAttack)
             {
                 canAttack = false;
@@ -162,7 +166,15 @@ public class PlayerController : MonoBehaviour
 
     private void MeleeAction()
     {
+        currentMeleeTime += Time.deltaTime;
 
+        if (currentMeleeTime > meleeAttackInterval)
+        {
+            currentMeleeTime = 0;
+
+            // TEST FOR NOW [NOT USING DAMAGE SYSTEM]
+            target.GetComponent<EnemyController>().TakeDamage(characterStats.GetNormalDamage());
+        }
     }
 
     private void GetInputAxis()
@@ -186,7 +198,7 @@ public class PlayerController : MonoBehaviour
         defenseMultiplier = characterStats.GetBaseDefenseMultiplier();
         manaRegen = characterStats.GetBaseManaRegen();
         damageAmount = characterStats.GetNormalDamage();
-        meleeAttackSpeed = characterStats.GetNormalAttackSpeed();
+        meleeAttackInterval = characterStats.GetNormalAttackSpeed();
 
         playerHUDController.InitializeBars(health, mana);
     }

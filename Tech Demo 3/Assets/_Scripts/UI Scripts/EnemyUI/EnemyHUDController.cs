@@ -32,10 +32,13 @@ public class EnemyHUDController : MonoBehaviour
         healthText.text = healthSlider.value + "/" + maxHealth;
     }
 
-    public void DisplayProfile(bool isTargeting)
+    public void DisplayProfile(bool isTargeting, GameObject target)
     {
         if (isTargeting)
+        {
+            SetHealth(target.GetComponent<EnemyController>().GetHealth());
             gameObject.SetActive(true);
+        }
         else
             gameObject.SetActive(false);
     }

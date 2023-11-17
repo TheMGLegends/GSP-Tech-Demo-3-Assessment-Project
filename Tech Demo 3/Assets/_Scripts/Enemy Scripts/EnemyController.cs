@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour
     private float meleeAttackSpeed;
 
     public EnemyHUDController GetEnemyHUDController() => enemyHUDController;
+    public float GetHealth() => health;
 
     private void Awake()
     {

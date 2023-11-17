@@ -1,15 +1,13 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimationController : MonoBehaviour
+public class EnemyAnimationController : MonoBehaviour
 {
     public enum AnimationStates
     {
         Idle,
-        Walk,
-        Melee_Ready,
-        Melee_Swing,
-        Cast,
+        Ranged_Attack,
         Dead
     }
 
@@ -44,7 +42,7 @@ public class PlayerAnimationController : MonoBehaviour
     private Animator animator;
     private AnimationStates currentState;
 
-    private PlayerController playerController;
+    private EnemyController enemyController;
     private SpriteRenderer spriteRenderer;
 
     private Vector2 movementInput;
@@ -53,9 +51,8 @@ public class PlayerAnimationController : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+        enemyController = GetComponent<EnemyController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        playerController = GetComponent<PlayerController>();
 
         for (int i = 0; i < animationStatesList.Count; i++)
         {
@@ -63,35 +60,10 @@ public class PlayerAnimationController : MonoBehaviour
         }
     }
 
-
     private void Update()
     {
-        movementInput = playerController.GetMovementInput();
-
-        if (target != playerController.GetTarget())
-        {
-            target = playerController.GetTarget();
-        }
-
-        if (target == null)
-        {
-            if (movementInput != Vector2.zero)
-            {
-                SetFacingDirection(movementInput.x);
-                animator.SetFloat("MovementY", movementInput.y);
-            }
-        }
-        else
-        {
-            TargetSystem(target.transform, movementInput);
-        }
-
-        if (movementInput != Vector2.zero)
-            ChangeAnimationState(AnimationStates.Walk);
-        else
-            ChangeAnimationState(AnimationStates.Idle);
+        
     }
-
 
     private void TargetSystem(Transform target, Vector2 movementInput)
     {
@@ -117,9 +89,9 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void SetFacingDirection(float facingDirection)
     {
-        if (facingDirection != 0 && facingDirection < 0) 
+        if (facingDirection != 0 && facingDirection < 0)
             spriteRenderer.flipX = true;
-        else if (facingDirection != 0 && facingDirection > 0) 
+        else if (facingDirection != 0 && facingDirection > 0)
             spriteRenderer.flipX = false;
     }
 }
