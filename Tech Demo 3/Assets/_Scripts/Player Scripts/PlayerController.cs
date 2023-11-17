@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -84,21 +81,36 @@ public class PlayerController : MonoBehaviour
 
     private void TargetAction()
     {
-        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
-        {
-            if (EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId)) return;
+        //if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
+        //{
+        //    if (EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId)) return;
+        //
+        //    Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.touches[0].position);
+        //    LockOn(touchPosition);
+        //}
 
-            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.touches[0].position);
-            LockOn(touchPosition);
+        if (Input.touchCount > 0)
+        {
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                if (Input.touches[i].phase == TouchPhase.Began)
+                {
+                    if (EventSystem.current.IsPointerOverGameObject(Input.touches[i].fingerId)) continue;
+
+                    Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.touches[i].position);
+                    LockOn(touchPosition);
+                }
+            }
         }
 
 #if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
+        else if (Input.GetMouseButtonDown(0))
         {
-            if (EventSystem.current.IsPointerOverGameObject()) return;
-
-            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            LockOn(touchPosition);
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                LockOn(touchPosition);
+            }
         }
 #endif
     }
@@ -155,9 +167,10 @@ public class PlayerController : MonoBehaviour
 #if UNITY_EDITOR
         movementInput.x = Input.GetAxisRaw("Horizontal");
         movementInput.y = Input.GetAxisRaw("Vertical");
-#endif
-        
+
         if (joystickController.GetJoystickInput() != Vector2.zero)
+            movementInput = joystickController.GetJoystickInput();
+#endif
             movementInput = joystickController.GetJoystickInput();
     }
 
@@ -173,4 +186,5 @@ public class PlayerController : MonoBehaviour
 
         playerHUDController.InitializeBars(health, mana);
     }
+
 }
