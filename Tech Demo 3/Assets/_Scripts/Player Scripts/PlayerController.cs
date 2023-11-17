@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private JoystickController joystickController;
     [SerializeField] private PlayerHUDController playerHUDController;
     [SerializeField] private MeleeAttackController meleeAttackController;
+    [SerializeField] private AbilitiesController abilitiesController;
 
     [SerializeField] private float meleeAttackRadius;
     [SerializeField] private LayerMask touchableMasks;
@@ -69,8 +70,8 @@ public class PlayerController : MonoBehaviour
         // TESTING:
 
         GetInputAxis();
-        TargetAction();
-        MeleeAction();
+        TargetAuthentication();
+        MeleeAuthentication();
     }
 
     private void FixedUpdate()
@@ -79,16 +80,8 @@ public class PlayerController : MonoBehaviour
         rb2D.velocity = new Vector2(movementInput.x * movementSpeed, movementInput.y * movementSpeed);
     }
 
-    private void TargetAction()
+    private void TargetAuthentication()
     {
-        //if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
-        //{
-        //    if (EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId)) return;
-        //
-        //    Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.touches[0].position);
-        //    LockOn(touchPosition);
-        //}
-
         if (Input.touchCount > 0)
         {
             for (int i = 0; i < Input.touchCount; i++)
@@ -98,7 +91,7 @@ public class PlayerController : MonoBehaviour
                     if (EventSystem.current.IsPointerOverGameObject(Input.touches[i].fingerId)) continue;
 
                     Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.touches[i].position);
-                    LockOn(touchPosition);
+                    TargetAction(touchPosition);
                 }
             }
         }
@@ -109,13 +102,13 @@ public class PlayerController : MonoBehaviour
             if (!EventSystem.current.IsPointerOverGameObject())
             {
                 Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                LockOn(touchPosition);
+                TargetAction(touchPosition);
             }
         }
 #endif
     }
 
-    private void LockOn(Vector3 touchPosition)
+    private void TargetAction(Vector3 touchPosition)
     {
         RaycastHit2D hit = Physics2D.Raycast(touchPosition, Vector2.zero, Mathf.Infinity, touchableMasks);
 
@@ -126,9 +119,11 @@ public class PlayerController : MonoBehaviour
                 target = hit.collider.gameObject;
                 target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(true);
                 meleeAttackController.gameObject.SetActive(true);
+                abilitiesController.ActivateCastingUI(true);
             }
             else if ((hit.collider.CompareTag("Enemy") && target != null) || (hit.collider.CompareTag("Ground") && target != null))
             {
+                abilitiesController.ActivateCastingUI(false);
                 meleeAttackController.gameObject.SetActive(false);
                 target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(false);
                 target = null;
@@ -139,7 +134,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void MeleeAction()
+    private void MeleeAuthentication()
     {
         if (target != null && Vector2.Distance(transform.position, target.transform.position) < meleeAttackRadius)
         {
@@ -159,11 +154,21 @@ public class PlayerController : MonoBehaviour
         }
 
         if (canAttack && meleeAttackController.GetIsMeleeOn())
+        {
             Debug.Log("Attacking");
+            MeleeAction();
+        }
+    }
+
+    private void MeleeAction()
+    {
+
     }
 
     private void GetInputAxis()
     {
+        movementInput = joystickController.GetJoystickInput();
+
 #if UNITY_EDITOR
         movementInput.x = Input.GetAxisRaw("Horizontal");
         movementInput.y = Input.GetAxisRaw("Vertical");
@@ -171,7 +176,6 @@ public class PlayerController : MonoBehaviour
         if (joystickController.GetJoystickInput() != Vector2.zero)
             movementInput = joystickController.GetJoystickInput();
 #endif
-            movementInput = joystickController.GetJoystickInput();
     }
 
     private void InitializeStats()

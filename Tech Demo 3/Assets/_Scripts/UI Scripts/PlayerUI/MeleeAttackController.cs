@@ -27,16 +27,6 @@ public class MeleeAttackController : MonoBehaviour
 
         gameObject.SetActive(false);
     }
-    
-    //public void EnableMeleeAttack()
-    //{
-    //    unusableObject.SetActive(false);
-    //}
-    //
-    //public void DisableMeleeAttack()
-    //{
-    //    unusableObject.SetActive(true);
-    //}
 
     public void ToggleButton()
     {

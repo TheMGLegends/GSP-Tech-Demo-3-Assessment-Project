@@ -305,6 +305,24 @@ Transform:
   - {fileID: 1748333444}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &462196876 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3658279772394580351, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+  m_PrefabInstance: {fileID: 8381820536548293519}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &462196879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462196876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e773dcea7dc05f458cb207b3d750cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  castingBar: {fileID: 1054953893}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,6 +645,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 290a22201b723604e9d15cb4790d7d2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1054953893 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6098871677196833136, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+  m_PrefabInstance: {fileID: 8381820536548293519}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1388875127 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 554874040216100422, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
@@ -1008,6 +1031,10 @@ PrefabInstance:
       propertyPath: joystickController
       value: 
       objectReference: {fileID: 950001362}
+    - target: {fileID: 7311854128855252930, guid: 4ed39bb511349c14e89f733599231f30, type: 3}
+      propertyPath: abilitiesController
+      value: 
+      objectReference: {fileID: 462196879}
     - target: {fileID: 7311854128855252930, guid: 4ed39bb511349c14e89f733599231f30, type: 3}
       propertyPath: playerHUDController
       value: 
@@ -1497,7 +1524,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3658279772394580351, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 462196879}
   m_SourcePrefab: {fileID: 100100000, guid: 5009342be2c17064caf7c75c76516d8b, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
