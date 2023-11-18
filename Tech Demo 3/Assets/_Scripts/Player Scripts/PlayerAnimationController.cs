@@ -41,6 +41,14 @@ public class PlayerAnimationController : MonoBehaviour
         }
     }
 
+    public float AnimationCompleteness(Animator animator, AnimationStates state)
+    {
+        if (IsAnimationPlaying(animator, state))
+            return animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        else
+            return 0;
+    }
+
     private Animator animator;
     private AnimationStates currentState;
 
@@ -63,7 +71,6 @@ public class PlayerAnimationController : MonoBehaviour
         }
     }
 
-
     private void Update()
     {
         movementInput = playerController.GetMovementInput();
@@ -85,11 +92,6 @@ public class PlayerAnimationController : MonoBehaviour
         {
             TargetSystem(target.transform, movementInput);
         }
-
-        if (movementInput != Vector2.zero)
-            ChangeAnimationState(AnimationStates.Walk);
-        else
-            ChangeAnimationState(AnimationStates.Idle);
     }
 
 

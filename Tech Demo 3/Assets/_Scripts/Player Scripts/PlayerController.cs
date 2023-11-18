@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -34,6 +35,10 @@ public class PlayerController : MonoBehaviour
     private bool canAttack;
     private float currentMeleeTime;
 
+    // INFO: Animation Controller:
+    private Animator animator;
+    private PlayerAnimationController animationController;
+
     public Vector2 GetMovementInput() => movementInput;
     public GameObject GetTarget() => target;
 
@@ -53,6 +58,9 @@ public class PlayerController : MonoBehaviour
         rb2D = GetComponent<Rigidbody2D>();
         meleeAttackRange = GetComponentInChildren<CircleCollider2D>();
         meleeAttackRange.radius = meleeAttackRadius;
+
+        animator = GetComponent<Animator>();
+        animationController = GetComponent<PlayerAnimationController>();
     }
 
 
@@ -71,9 +79,11 @@ public class PlayerController : MonoBehaviour
 
 
         GetInputAxis();
+        AnimateCharacter();
         TargetAuthentication();
         MeleeAuthentication();
     }
+
 
     private void FixedUpdate()
     {
@@ -159,7 +169,9 @@ public class PlayerController : MonoBehaviour
 
         if (canAttack && meleeAttackController.GetIsMeleeOn())
         {
-            Debug.Log("Attacking");
+            if (!animationController.IsAnimationPlaying(animator, PlayerAnimationController.AnimationStates.Melee_Swing))
+                animationController.ChangeAnimationState(PlayerAnimationController.AnimationStates.Melee_Ready);
+
             MeleeAction();
         }
     }
@@ -171,10 +183,12 @@ public class PlayerController : MonoBehaviour
         if (currentMeleeTime > meleeAttackInterval)
         {
             currentMeleeTime = 0;
+            animationController.ChangeAnimationState(PlayerAnimationController.AnimationStates.Melee_Swing);
+        }
 
+        if (animationController.AnimationCompleteness(animator, PlayerAnimationController.AnimationStates.Melee_Swing) > 0.99f)
             // TEST FOR NOW [NOT USING DAMAGE SYSTEM]
             target.GetComponent<EnemyController>().TakeDamage(characterStats.GetNormalDamage());
-        }
     }
 
     private void GetInputAxis()
@@ -190,6 +204,18 @@ public class PlayerController : MonoBehaviour
 #endif
     }
 
+    private void AnimateCharacter()
+    {
+        if (!animationController.IsAnimationPlaying(animator, PlayerAnimationController.AnimationStates.Melee_Swing) && 
+            !animationController.IsAnimationPlaying(animator, PlayerAnimationController.AnimationStates.Melee_Ready))
+        {
+            if (movementInput != Vector2.zero)
+                animationController.ChangeAnimationState(PlayerAnimationController.AnimationStates.Walk);
+            else
+                animationController.ChangeAnimationState(PlayerAnimationController.AnimationStates.Idle);
+        }
+    }
+    
     private void InitializeStats()
     {
         health = characterStats.GetBaseHealth();
