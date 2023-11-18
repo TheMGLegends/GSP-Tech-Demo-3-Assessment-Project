@@ -742,6 +742,10 @@ PrefabInstance:
       value: Enemy_1
       objectReference: {fileID: 0}
     - target: {fileID: 4798089887003492595, guid: 1524d5fea51e1364091021c844ffdd1d, type: 3}
+      propertyPath: damagePopupYOffset
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4798089887003492595, guid: 1524d5fea51e1364091021c844ffdd1d, type: 3}
       propertyPath: enemyHUDController
       value: 
       objectReference: {fileID: 1388875127}
@@ -943,6 +947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerObject: {fileID: 538918582}
+  damagePopupPrefab: {fileID: 5171120239752710661, guid: ee209b8b8185c144bbbda94fe7deb3e2, type: 3}
 --- !u!1 &2120722792
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,6 +1064,10 @@ PrefabInstance:
     - target: {fileID: 3427779385466934053, guid: 1524d5fea51e1364091021c844ffdd1d, type: 3}
       propertyPath: m_Name
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4798089887003492595, guid: 1524d5fea51e1364091021c844ffdd1d, type: 3}
+      propertyPath: damagePopupYOffset
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4798089887003492595, guid: 1524d5fea51e1364091021c844ffdd1d, type: 3}
       propertyPath: enemyHUDController

@@ -41,13 +41,6 @@ public class PlayerAnimationController : MonoBehaviour
         }
     }
 
-    public float AnimationCompleteness(Animator animator, AnimationStates state)
-    {
-        if (IsAnimationPlaying(animator, state))
-            return animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        else
-            return 0;
-    }
 
     private Animator animator;
     private AnimationStates currentState;

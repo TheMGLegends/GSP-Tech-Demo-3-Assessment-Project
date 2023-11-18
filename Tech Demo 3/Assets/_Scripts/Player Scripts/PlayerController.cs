@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -20,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private float movementSpeed;
     private float defenseMultiplier;
     private float manaRegen;
-    private float damageAmount;
+    private float meleeDamageAmount;
     private float meleeAttackInterval;
 
     // INFO: Movement Variables/Components:
@@ -184,11 +185,14 @@ public class PlayerController : MonoBehaviour
         {
             currentMeleeTime = 0;
             animationController.ChangeAnimationState(PlayerAnimationController.AnimationStates.Melee_Swing);
+            StartCoroutine(MeleeDamageCoroutine(animator.GetCurrentAnimatorStateInfo(0).length / 2));
         }
+    }
 
-        if (animationController.AnimationCompleteness(animator, PlayerAnimationController.AnimationStates.Melee_Swing) > 0.99f)
-            // TEST FOR NOW [NOT USING DAMAGE SYSTEM]
-            target.GetComponent<EnemyController>().TakeDamage(characterStats.GetNormalDamage());
+    private IEnumerator MeleeDamageCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        target.GetComponent<EnemyController>().TakeDamage(meleeDamageAmount);
     }
 
     private void GetInputAxis()
@@ -223,7 +227,7 @@ public class PlayerController : MonoBehaviour
         movementSpeed = characterStats.GetBaseMovementSpeed();
         defenseMultiplier = characterStats.GetBaseDefenseMultiplier();
         manaRegen = characterStats.GetBaseManaRegen();
-        damageAmount = characterStats.GetNormalDamage();
+        meleeDamageAmount = characterStats.GetNormalDamage();
         meleeAttackInterval = characterStats.GetNormalAttackSpeed();
 
         playerHUDController.InitializeBars(health, mana);
