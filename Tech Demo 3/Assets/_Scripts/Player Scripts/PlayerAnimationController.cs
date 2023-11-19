@@ -1,67 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimationController : MonoBehaviour
+public class PlayerAnimationController : AnimationController
 {
-    public enum AnimationStates
-    {
-        Idle,
-        Walk,
-        Melee_Ready,
-        Melee_Swing,
-        Cast,
-        Dead
-    }
-
-    public List<AnimationStates> animationStatesList = new();
-    [SerializeField] private List<string> animationStringsList = new();
-    [SerializeField] private Dictionary<AnimationStates, string> animationDictionary = new();
-
-    public void ChangeAnimationState(AnimationStates newState)
-    {
-        if (currentState == newState) return;
-
-        if (animationDictionary.ContainsKey(newState))
-        {
-            animator.Play(animationDictionary[newState]);
-            currentState = newState;
-        }
-    }
-
-    public bool IsAnimationPlaying(Animator animator, AnimationStates state)
-    {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName(animationDictionary[state])
-            && animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-
-    private Animator animator;
-    private AnimationStates currentState;
+    public const string IDLE = "Idle";
+    public const string WALK = "Walk";
+    public const string MELEE_READY = "Melee_Ready";
+    public const string MELEE_SWING = "Melee_Swing";
+    public const string CAST = "Cast";
+    public const string DEAD = "Dead";
 
     private PlayerController playerController;
-    private SpriteRenderer spriteRenderer;
 
     private Vector2 movementInput;
     private GameObject target;
 
-    private void Start()
+    protected override void Start()
     {
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-
+        base.Start();
         playerController = GetComponent<PlayerController>();
-
-        for (int i = 0; i < animationStatesList.Count; i++)
-        {
-            animationDictionary.Add(animationStatesList[i], animationStringsList[i]);
-        }
     }
 
     private void Update()
@@ -86,7 +43,6 @@ public class PlayerAnimationController : MonoBehaviour
             TargetSystem(target.transform, movementInput);
         }
     }
-
 
     private void TargetSystem(Transform target, Vector2 movementInput)
     {

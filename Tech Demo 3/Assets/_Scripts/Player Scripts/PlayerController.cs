@@ -37,7 +37,6 @@ public class PlayerController : MonoBehaviour
     private float currentMeleeTime;
 
     // INFO: Animation Controller:
-    private Animator animator;
     private PlayerAnimationController animationController;
 
     public Vector2 GetMovementInput() => movementInput;
@@ -60,7 +59,6 @@ public class PlayerController : MonoBehaviour
         meleeAttackRange = GetComponentInChildren<CircleCollider2D>();
         meleeAttackRange.radius = meleeAttackRadius;
 
-        animator = GetComponent<Animator>();
         animationController = GetComponent<PlayerAnimationController>();
     }
 
@@ -170,8 +168,8 @@ public class PlayerController : MonoBehaviour
 
         if (canAttack && meleeAttackController.GetIsMeleeOn())
         {
-            if (!animationController.IsAnimationPlaying(animator, PlayerAnimationController.AnimationStates.Melee_Swing))
-                animationController.ChangeAnimationState(PlayerAnimationController.AnimationStates.Melee_Ready);
+            if (!animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING))
+                animationController.ChangeAnimationState(PlayerAnimationController.MELEE_READY);
 
             MeleeAction();
         }
@@ -184,8 +182,8 @@ public class PlayerController : MonoBehaviour
         if (currentMeleeTime > meleeAttackInterval)
         {
             currentMeleeTime = 0;
-            animationController.ChangeAnimationState(PlayerAnimationController.AnimationStates.Melee_Swing);
-            StartCoroutine(MeleeDamageCoroutine(animator.GetCurrentAnimatorStateInfo(0).length / 2));
+            animationController.ChangeAnimationState(PlayerAnimationController.MELEE_SWING);
+            StartCoroutine(MeleeDamageCoroutine(animationController.GetAnimator().GetCurrentAnimatorStateInfo(0).length / 2));
         }
     }
 
@@ -210,13 +208,13 @@ public class PlayerController : MonoBehaviour
 
     private void AnimateCharacter()
     {
-        if (!animationController.IsAnimationPlaying(animator, PlayerAnimationController.AnimationStates.Melee_Swing) && 
-            !animationController.IsAnimationPlaying(animator, PlayerAnimationController.AnimationStates.Melee_Ready))
+        if (!animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING) && 
+            !animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_READY))
         {
             if (movementInput != Vector2.zero)
-                animationController.ChangeAnimationState(PlayerAnimationController.AnimationStates.Walk);
+                animationController.ChangeAnimationState(PlayerAnimationController.WALK);
             else
-                animationController.ChangeAnimationState(PlayerAnimationController.AnimationStates.Idle);
+                animationController.ChangeAnimationState(PlayerAnimationController.IDLE);
         }
     }
     
@@ -232,5 +230,4 @@ public class PlayerController : MonoBehaviour
 
         playerHUDController.InitializeBars(health, mana);
     }
-
 }
