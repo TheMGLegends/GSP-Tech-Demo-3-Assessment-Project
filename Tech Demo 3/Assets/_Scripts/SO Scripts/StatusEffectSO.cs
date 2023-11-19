@@ -20,6 +20,7 @@ public class StatusEffectSO : ScriptableObject
     [SerializeField, Tooltip("If false then it's a buff.")] private bool isDebuff;
     [SerializeField] private bool isStackable;
 
+    // INFO: Getter functions so variables can be accessed, but not changed
     public StatusEffectTypes GetStatusEffectType() => statusEffectType;
     public Sprite GetImage() => image;
     public float GetDuration() => duration;

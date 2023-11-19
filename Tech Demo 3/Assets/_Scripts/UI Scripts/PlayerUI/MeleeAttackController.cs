@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class MeleeAttackController : MonoBehaviour
 {
     [SerializeField] private Image outsideRangeImage;
-    private Button meleeButton;
 
     private Image buttonImage;
     private Color defaultColor;
@@ -18,7 +17,6 @@ public class MeleeAttackController : MonoBehaviour
 
     private void Start()
     {
-        meleeButton = GetComponent<Button>();
         outsideRangeImage.enabled = true;
 
         buttonImage = GetComponent<Image>();
@@ -32,13 +30,11 @@ public class MeleeAttackController : MonoBehaviour
     {
         if (!isMeleeOn)
         {
-            //buttonImage.color = activeColor;
             isMeleeOn = true;
             buttonImage.color = activeColor;
         }
         else
         {
-            //buttonImage.color = defaultColor;
             isMeleeOn = false;
             buttonImage.color = defaultColor;
         }

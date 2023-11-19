@@ -21,6 +21,7 @@ public class AbilitySO : ScriptableObject
     [SerializeField, Min(0), Tooltip("Length of time until usable again in seconds.")] private float cooldown;
     [SerializeField] private StatusEffectSO statusEffect;
 
+    // INFO: Getter functions so variables can be accessed, but not changed
     public AbilityTypes GetAbilityType() => abilityType;
     public int GetManaCost() => manaCost;
     public float GetCastingTime() => castingTime;
