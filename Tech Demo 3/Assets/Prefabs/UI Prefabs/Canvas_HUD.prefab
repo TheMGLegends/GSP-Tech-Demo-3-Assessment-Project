@@ -682,8 +682,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 8553466517440968888}
-  manaSlider: {fileID: 3031923863779543180}
   healthText: {fileID: 3330214451364581191}
+  manaSlider: {fileID: 3031923863779543180}
   manaText: {fileID: 4126795026243187284}
 --- !u!1 &2667301190715872181
 GameObject:
@@ -1675,6 +1675,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7751780659684965655}
   - component: {fileID: 6990683865166815265}
+  - component: {fileID: 8793581801409325008}
   m_Layer: 0
   m_Name: AbilitiesPanel
   m_TagString: Untagged
@@ -1729,6 +1730,19 @@ MonoBehaviour:
   m_Spacing: {x: 50, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &8793581801409325008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3658279772394580351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e773dcea7dc05f458cb207b3d750cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  castingBar: {fileID: 6098871677196833136}
 --- !u!1 &3703252429917810607
 GameObject:
   m_ObjectHideFlags: 0
@@ -3625,6 +3639,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 5616269803527409956}
   healthText: {fileID: 8800477905530288991}
+  manaSlider: {fileID: 0}
+  manaText: {fileID: 0}
 --- !u!1 &7827230943174192848
 GameObject:
   m_ObjectHideFlags: 0

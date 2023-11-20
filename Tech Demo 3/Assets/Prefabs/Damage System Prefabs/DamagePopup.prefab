@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3100813697397609791}
   - component: {fileID: 8430065692463215287}
   m_Layer: 0
-  m_Name: DPVisual
+  m_Name: DamagePopupVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
