@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class EnemyController : CharacterController
+public class EnemyController : CharacterBaseController
 {
     [SerializeField] private EnemyHUDController enemyHUDController;
 
@@ -19,5 +19,23 @@ public class EnemyController : CharacterController
         base.InitializeStats();
 
         enemyHUDController.InitializeBars(health);
+    }
+
+    protected override void DeathAction()
+    {
+        base.DeathAction();
+        characterAnimationController.ChangeAnimationState(EnemyAnimationController.DEAD);
+        Invoke(nameof(AfterDeath), characterAnimationController.GetAnimator().GetCurrentAnimatorStateInfo(0).length / 2);
+    }
+
+    protected override void AfterDeath()
+    {
+        enemyHUDController.enabled = false;
+
+        characterAnimationController.GetAnimator().enabled = false;
+        characterAnimationController.enabled = false;
+
+        enabled = false;
+        GetComponent<CharacterBaseController>().enabled = false;
     }
 }

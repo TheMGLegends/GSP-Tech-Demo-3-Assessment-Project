@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 
-public class PlayerController : CharacterController
+public class PlayerController : CharacterBaseController
 {
     // INFO: HUD References:
     [SerializeField] private JoystickController joystickController;
@@ -92,6 +93,13 @@ public class PlayerController : CharacterController
 
     private void Update()
     {
+        //Testing CODE:
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            DamageManager.Instance.Damage(1000, this, playerHUDController);
+        }
+
+
         GetInputAxis();
         AnimateCharacter();
         TargetAuthentication();
@@ -148,14 +156,23 @@ public class PlayerController : CharacterController
             }
             else if ((hit.collider.CompareTag("Enemy") && target != null) || (hit.collider.CompareTag("Ground") && target != null))
             {
-                abilitiesController.ActivateCastingUI(false);
-                meleeAttackController.gameObject.SetActive(false);
-                target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(false, null);
-                target = null;
+                DisableUI();
             }
 
             if (meleeAttackController.GetIsMeleeOn())
                 meleeAttackController.ToggleButton();
+        }
+    }
+
+    private void DisableUI()
+    {
+        abilitiesController.ActivateCastingUI(false);
+        meleeAttackController.gameObject.SetActive(false);
+
+        if (target != null)
+        {
+            target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(false, null);
+            target = null;
         }
     }
 
@@ -186,7 +203,8 @@ public class PlayerController : CharacterController
             if (!animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING))
                 animationController.ChangeAnimationState(PlayerAnimationController.MELEE_READY);
 
-            MeleeAction();
+            if (!target.GetComponent<EnemyController>().GetIsDead())
+                MeleeAction();
         }
     }
 
@@ -206,5 +224,32 @@ public class PlayerController : CharacterController
     {
         yield return new WaitForSeconds(delay);
         DamageManager.Instance.Damage(meleeDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());
+    }
+
+    protected override void DeathAction()
+    {
+        base.DeathAction();
+        DisableUI();
+        characterAnimationController.ChangeAnimationState(PlayerAnimationController.DEAD);
+
+        rb2D.velocity = Vector2.zero;
+        enabled = false;
+
+        Invoke(nameof(AfterDeath), (characterAnimationController.GetAnimator().GetCurrentAnimatorStateInfo(0).length / 2) + 3f);
+    }
+
+    protected override void AfterDeath()
+    {
+        enabled = true;
+        transform.position = startingPosition;
+        InitializeStats();
+        characterCollider.enabled = true;
+        movementInput = Vector2.zero;
+        if (health > 0)
+        {
+            animationController.SetFacingDirection(movementInput.x);
+            characterAnimationController.GetAnimator().SetFloat("MovementY", movementInput.y);
+            characterAnimationController.ChangeAnimationState(PlayerAnimationController.IDLE);
+        }
     }
 }

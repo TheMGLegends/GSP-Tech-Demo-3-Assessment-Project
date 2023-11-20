@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAnimationController : AnimationController
+public class EnemyAnimationController : CharacterAnimationController
 {
     public const string IDLE = "Idle";
     public const string RANGED_ATTACK = "Ranged_Attack";

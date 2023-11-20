@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimationController : AnimationController
+public class PlayerAnimationController : CharacterAnimationController
 {
     public const string IDLE = "Idle";
     public const string WALK = "Walk";
@@ -66,7 +66,7 @@ public class PlayerAnimationController : AnimationController
         animator.SetFloat("MovementY", movementInput.y);
     }
 
-    private void SetFacingDirection(float facingDirection)
+    public void SetFacingDirection(float facingDirection)
     {
         if (facingDirection != 0 && facingDirection < 0) 
             spriteRenderer.flipX = true;

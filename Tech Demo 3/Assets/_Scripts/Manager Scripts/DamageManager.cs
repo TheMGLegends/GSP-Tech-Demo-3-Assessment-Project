@@ -17,7 +17,7 @@ public class DamageManager : MonoBehaviour
             Instance = this;
     }
 
-    public void Damage(float damage, CharacterController targetController, CharacterHUDController targetHUDController)
+    public void Damage(float damage, CharacterBaseController targetController, CharacterHUDController targetHUDController)
     {
         if (Random.Range(0, 101) <= hitChance)
         {
@@ -40,11 +40,10 @@ public class DamageManager : MonoBehaviour
             Debug.Log("Missed hit!");
     }
 
-    private IEnumerator ActivateDamagePopup(float duration, CharacterController targetController)
+    private IEnumerator ActivateDamagePopup(float duration, CharacterBaseController targetController)
     {
         GameObject damagePopupObject = targetController.GetDamagePopupObject();
         Animator targetAnimator = targetController.GetDamagePopupAnimator();
-
 
         damagePopupObject.SetActive(true);
         targetAnimator.SetBool("IsFloating", true);

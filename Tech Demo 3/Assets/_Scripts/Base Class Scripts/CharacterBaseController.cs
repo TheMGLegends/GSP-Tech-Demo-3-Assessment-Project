@@ -1,10 +1,11 @@
 using NUnit.Framework.Internal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class CharacterBaseController : MonoBehaviour
 {
     [SerializeField] protected CharacterStatsSO characterStats;
 
@@ -19,11 +20,19 @@ public class CharacterController : MonoBehaviour
     protected TextMesh damagePopupText;
     protected float damagePopupYOffset = 1.5f;
 
+    protected Vector2 startingPosition;
+    protected bool isDead;
+
+    protected CharacterAnimationController characterAnimationController;
+    protected BoxCollider2D characterCollider;
+
     public float GetHealth() => health;
     public float GetDefenseMultiplier() => defenseMultiplier;
     public GameObject GetDamagePopupObject() => damagePopupObject;
     public Animator GetDamagePopupAnimator() => damagePopupAnimator;
     public TextMesh GetDamagePopupText() => damagePopupText;
+    public bool GetIsDead() => isDead;
+    public CharacterAnimationController GetCharacterAnimationController() => characterAnimationController;
 
     private void Awake()
     {
@@ -34,11 +43,16 @@ public class CharacterController : MonoBehaviour
     {
         damagePopupObject = Instantiate(ReferenceManager.Instance.damagePopupPrefab,
                                   new Vector2(transform.position.x, transform.position.y + damagePopupYOffset),
-                                  Quaternion.identity);
+                                  Quaternion.identity, transform);
         damagePopupObject.SetActive(false);
 
         damagePopupText = damagePopupObject.transform.GetChild(0).GetComponent<TextMesh>();
         damagePopupAnimator = damagePopupObject.transform.GetChild(0).GetComponent<Animator>();
+
+        startingPosition = transform.position;
+
+        characterAnimationController = GetComponent<CharacterAnimationController>();
+        characterCollider = GetComponent<BoxCollider2D>();
     }
 
     protected virtual void InitializeStats()
@@ -50,9 +64,24 @@ public class CharacterController : MonoBehaviour
         normalAttackInterval = characterStats.GetNormalAttackSpeed();
     }
 
-    public virtual void ReduceHealth(float damage)
+    public void ReduceHealth(float damage)
     {
         health -= damage;
-        Debug.Log(health);
+
+        if (health <= 0)
+        {
+            isDead = true;
+            DeathAction();
+        }
+    }
+
+    protected virtual void DeathAction()
+    {
+        characterCollider.enabled = false;
+    }
+
+    protected virtual void AfterDeath()
+    {
+        isDead = false;
     }
 }
