@@ -4,25 +4,21 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : CharacterController
 {
-    [SerializeField] private CharacterStatsSO characterStats;
+    // INFO: HUD References:
     [SerializeField] private JoystickController joystickController;
     [SerializeField] private PlayerHUDController playerHUDController;
     [SerializeField] private MeleeAttackController meleeAttackController;
     [SerializeField] private AbilitiesController abilitiesController;
 
+    // INFO: Melee Attack References:
     [SerializeField] private float meleeAttackRadius;
     [SerializeField] private LayerMask touchableMasks;
 
-    // INFO: Character Stats Variables:
-    private float health;
+    // INFO: Player Stats Variables:
     private float mana;
-    private float movementSpeed;
-    private float defenseMultiplier;
     private float manaRegen;
-    private float meleeDamageAmount;
-    private float meleeAttackInterval;
 
     // INFO: Movement Variables/Components:
     private Rigidbody2D rb2D;
@@ -48,13 +44,11 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, meleeAttackRadius);
     }
 
-    private void Awake()
+    protected override void Start()
     {
-        InitializeStats();
-    }
+        base.Start();
+        damagePopupText.color = Color.yellow;
 
-    private void Start()
-    {
         rb2D = GetComponent<Rigidbody2D>();
         meleeAttackRange = GetComponentInChildren<CircleCollider2D>();
         meleeAttackRange.radius = meleeAttackRadius;
@@ -62,21 +56,17 @@ public class PlayerController : MonoBehaviour
         animationController = GetComponent<PlayerAnimationController>();
     }
 
+    protected override void InitializeStats()
+    {
+        base.InitializeStats();
+        mana = characterStats.GetBaseMana();
+        manaRegen = characterStats.GetBaseManaRegen();
+
+        playerHUDController.InitializeBars(health, mana);
+    }
 
     private void Update()
     {
-        // TESTING:
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            health -= 10;
-            mana -= 15;
-            Debug.Log(health);
-            Debug.Log(mana);
-            playerHUDController.SetHealth(health);
-            playerHUDController.SetMana(mana);
-        }
-
-
         GetInputAxis();
         AnimateCharacter();
         TargetAuthentication();
@@ -179,7 +169,7 @@ public class PlayerController : MonoBehaviour
     {
         currentMeleeTime += Time.deltaTime;
 
-        if (currentMeleeTime > meleeAttackInterval)
+        if (currentMeleeTime > normalAttackInterval)
         {
             currentMeleeTime = 0;
             animationController.ChangeAnimationState(PlayerAnimationController.MELEE_SWING);
@@ -218,16 +208,4 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    private void InitializeStats()
-    {
-        health = characterStats.GetBaseHealth();
-        mana = characterStats.GetBaseMana();
-        movementSpeed = characterStats.GetBaseMovementSpeed();
-        defenseMultiplier = characterStats.GetBaseDefenseMultiplier();
-        manaRegen = characterStats.GetBaseManaRegen();
-        meleeDamageAmount = characterStats.GetNormalDamage();
-        meleeAttackInterval = characterStats.GetNormalAttackSpeed();
-
-        playerHUDController.InitializeBars(health, mana);
-    }
 }
