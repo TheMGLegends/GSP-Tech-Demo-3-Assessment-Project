@@ -26,6 +26,8 @@ public class CharacterBaseController : MonoBehaviour
     protected CharacterAnimationController characterAnimationController;
     protected BoxCollider2D characterCollider;
 
+    protected GameObject target;
+
     public float GetHealth() => health;
     public float GetDefenseMultiplier() => defenseMultiplier;
     public GameObject GetDamagePopupObject() => damagePopupObject;
@@ -33,6 +35,10 @@ public class CharacterBaseController : MonoBehaviour
     public TextMesh GetDamagePopupText() => damagePopupText;
     public bool GetIsDead() => isDead;
     public CharacterAnimationController GetCharacterAnimationController() => characterAnimationController;
+    public GameObject GetTarget() => target;
+    public Vector2 GetStartingPosition() => startingPosition;
+    public CharacterStatsSO GetCharacterStats() => characterStats;
+    public void SetHealth(float health) {  this.health = health; }
 
     private void Awake()
     {

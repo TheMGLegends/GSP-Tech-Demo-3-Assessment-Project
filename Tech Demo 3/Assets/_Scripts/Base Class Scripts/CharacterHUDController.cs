@@ -15,6 +15,9 @@ public class CharacterHUDController : MonoBehaviour
     protected float maxHealth;
     protected float maxMana;
 
+    public float GetMaxHealth() => maxHealth;
+    public float GetMaxMana() => maxMana;
+
     public virtual void InitializeBars(float health)
     {
         maxHealth = health;

@@ -38,4 +38,13 @@ public class EnemyController : CharacterBaseController
         enabled = false;
         GetComponent<CharacterBaseController>().enabled = false;
     }
+
+    public void AfterPlayerDeath()
+    {
+        transform.position = startingPosition;
+        target = null;
+        health = enemyHUDController.GetMaxHealth();
+        enemyHUDController.SetHealth(health);
+        characterAnimationController.ChangeAnimationState(EnemyAnimationController.IDLE);
+    }
 }

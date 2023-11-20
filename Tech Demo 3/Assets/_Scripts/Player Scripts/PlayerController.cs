@@ -25,9 +25,6 @@ public class PlayerController : CharacterBaseController
     private Rigidbody2D rb2D;
     private Vector2 movementInput;
 
-    // INFO: Targetting System Variables/Components:
-    private GameObject target;
-
     // INFO: Meleeing System Variables/Components:
     private CircleCollider2D meleeAttackRange;
     private bool canAttack;
@@ -37,7 +34,6 @@ public class PlayerController : CharacterBaseController
     private PlayerAnimationController animationController;
 
     public Vector2 GetMovementInput() => movementInput;
-    public GameObject GetTarget() => target;
 
     private void OnDrawGizmos()
     {
@@ -231,8 +227,8 @@ public class PlayerController : CharacterBaseController
         base.DeathAction();
         DisableUI();
         characterAnimationController.ChangeAnimationState(PlayerAnimationController.DEAD);
-
         rb2D.velocity = Vector2.zero;
+        characterAnimationController.GetAnimator().SetBool("IsDead", isDead);
         enabled = false;
 
         Invoke(nameof(AfterDeath), (characterAnimationController.GetAnimator().GetCurrentAnimatorStateInfo(0).length / 2) + 3f);
@@ -240,16 +236,15 @@ public class PlayerController : CharacterBaseController
 
     protected override void AfterDeath()
     {
+        base.AfterDeath();
         enabled = true;
         transform.position = startingPosition;
         InitializeStats();
         characterCollider.enabled = true;
-        movementInput = Vector2.zero;
-        if (health > 0)
-        {
-            animationController.SetFacingDirection(movementInput.x);
-            characterAnimationController.GetAnimator().SetFloat("MovementY", movementInput.y);
-            characterAnimationController.ChangeAnimationState(PlayerAnimationController.IDLE);
-        }
+
+        characterAnimationController.GetAnimator().SetBool("IsDead", isDead);
+        characterAnimationController.GetAnimator().SetFloat("MovementY", -1);
+        animationController.SetFacingDirection(1);
+        characterAnimationController.ChangeAnimationState(PlayerAnimationController.IDLE);
     }
 }
