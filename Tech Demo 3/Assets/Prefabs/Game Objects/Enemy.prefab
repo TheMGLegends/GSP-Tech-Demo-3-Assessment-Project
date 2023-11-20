@@ -182,8 +182,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3aefa9d7c771f6649a920fb8f5406484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationStatesList: 000000000100000002000000
-  animationStringsList:
-  - Idle
-  - Ranged_Attack
-  - Dead

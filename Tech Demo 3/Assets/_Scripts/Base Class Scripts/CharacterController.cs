@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -19,6 +20,10 @@ public class CharacterController : MonoBehaviour
     protected float damagePopupYOffset = 1.5f;
 
     public float GetHealth() => health;
+    public float GetDefenseMultiplier() => defenseMultiplier;
+    public GameObject GetDamagePopupObject() => damagePopupObject;
+    public Animator GetDamagePopupAnimator() => damagePopupAnimator;
+    public TextMesh GetDamagePopupText() => damagePopupText;
 
     private void Awake()
     {
@@ -43,5 +48,11 @@ public class CharacterController : MonoBehaviour
         defenseMultiplier = characterStats.GetBaseDefenseMultiplier();
         meleeDamageAmount = characterStats.GetNormalDamage();
         normalAttackInterval = characterStats.GetNormalAttackSpeed();
+    }
+
+    public virtual void ReduceHealth(float damage)
+    {
+        health -= damage;
+        Debug.Log(health);
     }
 }

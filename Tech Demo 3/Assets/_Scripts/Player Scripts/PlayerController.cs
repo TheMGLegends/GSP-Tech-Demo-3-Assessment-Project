@@ -65,6 +65,31 @@ public class PlayerController : CharacterController
         playerHUDController.InitializeBars(health, mana);
     }
 
+    private void GetInputAxis()
+    {
+        movementInput = joystickController.GetJoystickInput();
+
+#if UNITY_EDITOR
+        movementInput.x = Input.GetAxisRaw("Horizontal");
+        movementInput.y = Input.GetAxisRaw("Vertical");
+
+        if (joystickController.GetJoystickInput() != Vector2.zero)
+            movementInput = joystickController.GetJoystickInput();
+#endif
+    }
+
+    private void AnimateCharacter()
+    {
+        if (!animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING) && 
+            !animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_READY))
+        {
+            if (movementInput != Vector2.zero)
+                animationController.ChangeAnimationState(PlayerAnimationController.WALK);
+            else
+                animationController.ChangeAnimationState(PlayerAnimationController.IDLE);
+        }
+    }
+
     private void Update()
     {
         GetInputAxis();
@@ -180,32 +205,6 @@ public class PlayerController : CharacterController
     private IEnumerator MeleeDamageCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        target.GetComponent<EnemyController>().TakeDamage(meleeDamageAmount);
+        DamageManager.Instance.Damage(meleeDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());
     }
-
-    private void GetInputAxis()
-    {
-        movementInput = joystickController.GetJoystickInput();
-
-#if UNITY_EDITOR
-        movementInput.x = Input.GetAxisRaw("Horizontal");
-        movementInput.y = Input.GetAxisRaw("Vertical");
-
-        if (joystickController.GetJoystickInput() != Vector2.zero)
-            movementInput = joystickController.GetJoystickInput();
-#endif
-    }
-
-    private void AnimateCharacter()
-    {
-        if (!animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING) && 
-            !animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_READY))
-        {
-            if (movementInput != Vector2.zero)
-                animationController.ChangeAnimationState(PlayerAnimationController.WALK);
-            else
-                animationController.ChangeAnimationState(PlayerAnimationController.IDLE);
-        }
-    }
-    
 }

@@ -439,6 +439,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4365214028535519523, guid: 4ed39bb511349c14e89f733599231f30, type: 3}
   m_PrefabInstance: {fileID: 2841957191442378513}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &552437050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 552437051}
+  - component: {fileID: 552437052}
+  m_Layer: 0
+  m_Name: DamageManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &552437051
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 552437050}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1544734573}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &552437052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 552437050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58427b6cfef126f4fbc33fafe601c1bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &566412783
 GameObject:
   m_ObjectHideFlags: 0
@@ -722,6 +766,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2108839348}
+  - {fileID: 552437051}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1734919759 stripped
@@ -1064,10 +1109,6 @@ PrefabInstance:
     - target: {fileID: 3427779385466934053, guid: 1524d5fea51e1364091021c844ffdd1d, type: 3}
       propertyPath: m_Name
       value: Enemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 4798089887003492595, guid: 1524d5fea51e1364091021c844ffdd1d, type: 3}
-      propertyPath: damagePopupYOffset
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4798089887003492595, guid: 1524d5fea51e1364091021c844ffdd1d, type: 3}
       propertyPath: enemyHUDController
