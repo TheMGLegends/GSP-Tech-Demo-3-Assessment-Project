@@ -24,6 +24,7 @@ public class EnemyController : CharacterBaseController
     protected override void DeathAction()
     {
         base.DeathAction();
+        EnemyManager.Instance.RemoveEnemy(this);
         characterAnimationController.ChangeAnimationState(EnemyAnimationController.DEAD);
         Invoke(nameof(AfterDeath), characterAnimationController.GetAnimator().GetCurrentAnimatorStateInfo(0).length / 2);
     }

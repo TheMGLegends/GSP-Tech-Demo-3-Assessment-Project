@@ -77,7 +77,7 @@ public class PlayerController : CharacterBaseController
 
     private void AnimateCharacter()
     {
-        if (!animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING) && 
+        if (!animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING) &&
             !animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_READY))
         {
             if (movementInput != Vector2.zero)
@@ -219,7 +219,7 @@ public class PlayerController : CharacterBaseController
     private IEnumerator MeleeDamageCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        DamageManager.Instance.Damage(meleeDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());
+        DamageManager.Instance.Damage(1000, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());
     }
 
     protected override void DeathAction()
@@ -237,6 +237,7 @@ public class PlayerController : CharacterBaseController
     protected override void AfterDeath()
     {
         base.AfterDeath();
+        EnemyManager.Instance.ResetEnemies();
         enabled = true;
         transform.position = startingPosition;
         InitializeStats();

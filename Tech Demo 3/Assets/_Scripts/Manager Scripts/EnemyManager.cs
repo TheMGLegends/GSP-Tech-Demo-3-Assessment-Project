@@ -15,7 +15,6 @@ public class EnemyManager : MonoBehaviour
     }
 
     private List<EnemyController> enemiesList = new();
-    private bool sortedEnemies;
 
     private void Start()
     {
@@ -27,23 +26,16 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void ResetEnemies()
     {
-        if (!ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetIsDead() && sortedEnemies)
-            sortedEnemies = false;
-        else if (ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetIsDead() && !sortedEnemies)
+        for (int i = 0; i < enemiesList.Count; i++)
         {
+            Vector2 enemyPos = new(enemiesList[i].transform.position.x, enemiesList[i].transform.position.y);
 
-            sortedEnemies = true;
-            for (int i = 0; i < enemiesList.Count; i++)
+            if (enemiesList[i].GetHealth() < enemiesList[i].GetCharacterStats().GetBaseHealth() ||
+                enemyPos != enemiesList[i].GetStartingPosition())
             {
-                Vector2 enemyPos = new(enemiesList[i].transform.position.x, enemiesList[i].transform.position.y);
-
-                if (enemiesList[i].GetHealth() < enemiesList[i].GetCharacterStats().GetBaseHealth() ||
-                    enemyPos != enemiesList[i].GetStartingPosition())
-                {
-                    ResetEnemy(enemiesList[i]);
-                }
+                enemiesList[i].AfterPlayerDeath();
             }
         }
     }
@@ -56,11 +48,5 @@ public class EnemyManager : MonoBehaviour
     public void RemoveEnemy(EnemyController enemy)
     {
         enemiesList.Remove(enemy);
-    }
-
-    private void ResetEnemy(EnemyController enemy)
-    {
-        enemy.SetHealth(enemy.GetCharacterStats().GetBaseHealth());
-        enemy.transform.position = enemy.GetStartingPosition();
     }
 }

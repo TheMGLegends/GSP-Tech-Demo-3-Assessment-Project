@@ -38,7 +38,6 @@ public class CharacterBaseController : MonoBehaviour
     public GameObject GetTarget() => target;
     public Vector2 GetStartingPosition() => startingPosition;
     public CharacterStatsSO GetCharacterStats() => characterStats;
-    public void SetHealth(float health) {  this.health = health; }
 
     private void Awake()
     {
