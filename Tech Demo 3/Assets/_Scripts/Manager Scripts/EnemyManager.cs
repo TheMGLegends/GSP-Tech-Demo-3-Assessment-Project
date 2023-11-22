@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
@@ -14,7 +15,7 @@ public class EnemyManager : MonoBehaviour
             Instance = this;
     }
 
-    private List<EnemyController> enemiesList = new();
+    private readonly List<EnemyController> enemiesList = new();
 
     private void Start()
     {
@@ -30,13 +31,7 @@ public class EnemyManager : MonoBehaviour
     {
         for (int i = 0; i < enemiesList.Count; i++)
         {
-            Vector2 enemyPos = new(enemiesList[i].transform.position.x, enemiesList[i].transform.position.y);
-
-            if (enemiesList[i].GetHealth() < enemiesList[i].GetCharacterStats().GetBaseHealth() ||
-                enemyPos != enemiesList[i].GetStartingPosition())
-            {
-                enemiesList[i].AfterPlayerDeath();
-            }
+            enemiesList[i].AfterPlayerDeath();
         }
     }
 

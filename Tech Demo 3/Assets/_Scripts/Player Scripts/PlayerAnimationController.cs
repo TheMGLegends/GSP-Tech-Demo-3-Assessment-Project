@@ -39,9 +39,7 @@ public class PlayerAnimationController : CharacterAnimationController
             }
         }
         else
-        {
             TargetSystem(target.transform, movementInput);
-        }
     }
 
     private void TargetSystem(Transform target, Vector2 movementInput)

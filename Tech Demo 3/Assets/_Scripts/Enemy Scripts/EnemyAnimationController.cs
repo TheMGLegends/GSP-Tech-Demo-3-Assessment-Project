@@ -10,7 +10,7 @@ public class EnemyAnimationController : CharacterAnimationController
 
     private EnemyController enemyController;
 
-    private Vector2 movementInput;
+    private Vector2 movementDirection;
     private GameObject target;
 
     protected override void Start()
@@ -21,36 +21,46 @@ public class EnemyAnimationController : CharacterAnimationController
 
     private void Update()
     {
-        
+        if (target != enemyController.GetTarget())
+        {
+            target = enemyController.GetTarget();
+        }
+
+        if (target == null)
+        {
+
+        }
+        else
+            TargetSystem(target.transform);
     }
     
-    private void TargetSystem(Transform target, Vector2 movementInput)
+    private void TargetSystem(Transform target)
     {
         // Above Target:
         if (transform.position.y > target.position.y)
-            movementInput.y = -1;
+            movementDirection.y = -1;
     
         // Below Target:
         else if (transform.position.y < target.position.y)
-            movementInput.y = 1;
+            movementDirection.y = 1;
     
         // Left of Target:
         if (transform.position.x < target.position.x)
-            movementInput.x = 1;
+            movementDirection.x = 1;
     
         //Right of Target:
         if (transform.position.x > target.position.x)
-            movementInput.x = -1;
+            movementDirection.x = -1;
     
-        SetFacingDirection(movementInput.x);
-        animator.SetFloat("MovementY", movementInput.y);
+        SetFacingDirection(movementDirection.x);
+        animator.SetFloat("MovementY", movementDirection.y);
     }
     
-    private void SetFacingDirection(float facingDirection)
+    public void SetFacingDirection(float facingDirection)
     {
-        if (facingDirection != 0 && facingDirection < 0)
+        if (facingDirection != 0 && facingDirection > 0)
             spriteRenderer.flipX = true;
-        else if (facingDirection != 0 && facingDirection > 0)
+        else if (facingDirection != 0 && facingDirection < 0)
             spriteRenderer.flipX = false;
     }
 }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4365214028535519523}
   - component: {fileID: 5002435853797119110}
-  - component: {fileID: 3680406584766929226}
+  - component: {fileID: 3525768703221878487}
   - component: {fileID: 5197853963825840138}
   - component: {fileID: 2454709530388744698}
   - component: {fileID: 7311854128855252930}
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 4fb1d4201b502e54a95407eeaac4db88, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -90,7 +90,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &3680406584766929226
+--- !u!61 &3525768703221878487
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,11 +120,11 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.004742682, y: -0.2608453}
+  m_Offset: {x: 0, y: -0.25}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -134,7 +134,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.5731623, y: 1.1043382}
+  m_Size: {x: 0.5, y: 1}
   m_EdgeRadius: 0
 --- !u!50 &5197853963825840138
 Rigidbody2D:
@@ -144,7 +144,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3571605629607790957}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -218,14 +218,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0646ebd8345a13b42b409da4e7341179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationStatesList: 000000000100000002000000030000000400000005000000
-  animationStringsList:
-  - Idle
-  - Walk
-  - Melee_Ready
-  - Melee_Swing
-  - Cast
-  - Dead
 --- !u!1 &5331467399753637779
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,7 +280,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

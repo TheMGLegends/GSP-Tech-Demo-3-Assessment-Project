@@ -20,11 +20,10 @@ public class CharacterBaseController : MonoBehaviour
     protected TextMesh damagePopupText;
     protected float damagePopupYOffset = 1.5f;
 
-    protected Vector2 startingPosition;
+    protected Vector3 startingPosition;
     protected bool isDead;
 
     protected CharacterAnimationController characterAnimationController;
-    protected BoxCollider2D characterCollider;
 
     protected GameObject target;
 
@@ -38,6 +37,7 @@ public class CharacterBaseController : MonoBehaviour
     public GameObject GetTarget() => target;
     public Vector2 GetStartingPosition() => startingPosition;
     public CharacterStatsSO GetCharacterStats() => characterStats;
+    public void SetTarget(GameObject target) { this.target = target; }
 
     private void Awake()
     {
@@ -57,7 +57,6 @@ public class CharacterBaseController : MonoBehaviour
         startingPosition = transform.position;
 
         characterAnimationController = GetComponent<CharacterAnimationController>();
-        characterCollider = GetComponent<BoxCollider2D>();
     }
 
     protected virtual void InitializeStats()
@@ -82,7 +81,6 @@ public class CharacterBaseController : MonoBehaviour
 
     protected virtual void DeathAction()
     {
-        characterCollider.enabled = false;
     }
 
     protected virtual void AfterDeath()

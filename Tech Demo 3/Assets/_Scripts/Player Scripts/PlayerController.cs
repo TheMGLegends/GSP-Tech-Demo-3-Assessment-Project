@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq.Expressions;
+using Unity.Android.Types;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -23,6 +24,7 @@ public class PlayerController : CharacterBaseController
 
     // INFO: Movement Variables/Components:
     private Rigidbody2D rb2D;
+    private BoxCollider2D playerCollider;
     private Vector2 movementInput;
 
     // INFO: Meleeing System Variables/Components:
@@ -46,7 +48,8 @@ public class PlayerController : CharacterBaseController
         base.Start();
         damagePopupText.color = Color.yellow;
 
-        rb2D = GetComponent<Rigidbody2D>();
+        rb2D = GetComponent<Rigidbody2D>(); 
+        playerCollider = GetComponent<BoxCollider2D>();
         meleeAttackRange = GetComponentInChildren<CircleCollider2D>();
         meleeAttackRange.radius = meleeAttackRadius;
 
@@ -143,14 +146,15 @@ public class PlayerController : CharacterBaseController
 
         if (hit != false && hit.collider != null)
         {
-            if (hit.collider.CompareTag("Enemy"))
+            if (hit.collider.gameObject.CompareTag("Enemy"))
             {
                 target = hit.collider.gameObject;
                 target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(true, target);
                 meleeAttackController.gameObject.SetActive(true);
                 abilitiesController.ActivateCastingUI(true);
             }
-            else if ((hit.collider.CompareTag("Enemy") && target != null) || (hit.collider.CompareTag("Ground") && target != null))
+            else if ((hit.collider.gameObject.CompareTag("Enemy") && target != null) || 
+                     (hit.collider.gameObject.CompareTag("Ground") && target != null))
             {
                 DisableUI();
             }
@@ -201,6 +205,8 @@ public class PlayerController : CharacterBaseController
 
             if (!target.GetComponent<EnemyController>().GetIsDead())
                 MeleeAction();
+            else
+                Invoke(nameof(DisableUI), 2);
         }
     }
 
@@ -219,12 +225,16 @@ public class PlayerController : CharacterBaseController
     private IEnumerator MeleeDamageCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
+        //DamageManager.Instance.Damage(meleeDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());
+
+        //Testing Code:
         DamageManager.Instance.Damage(1000, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());
     }
 
     protected override void DeathAction()
     {
-        base.DeathAction();
+        EnemyManager.Instance.ResetEnemies();
+        playerCollider.enabled = false;
         DisableUI();
         characterAnimationController.ChangeAnimationState(PlayerAnimationController.DEAD);
         rb2D.velocity = Vector2.zero;
@@ -237,11 +247,10 @@ public class PlayerController : CharacterBaseController
     protected override void AfterDeath()
     {
         base.AfterDeath();
-        EnemyManager.Instance.ResetEnemies();
         enabled = true;
         transform.position = startingPosition;
         InitializeStats();
-        characterCollider.enabled = true;
+        playerCollider.enabled = true;
 
         characterAnimationController.GetAnimator().SetBool("IsDead", isDead);
         characterAnimationController.GetAnimator().SetFloat("MovementY", -1);
