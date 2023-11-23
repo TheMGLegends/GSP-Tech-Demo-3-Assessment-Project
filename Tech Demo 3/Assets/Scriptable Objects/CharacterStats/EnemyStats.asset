@@ -15,7 +15,7 @@ MonoBehaviour:
   characterType: 1
   baseHealth: 250
   baseMana: 0
-  baseMovementSpeed: 2
+  baseMovementSpeed: 1.5
   baseDefenseMultiplier: 0.8
   baseManaRegen: 0
   normalDamageAmount: 25

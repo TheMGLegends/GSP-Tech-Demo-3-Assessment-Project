@@ -12,13 +12,14 @@ public class CharacterBaseController : MonoBehaviour
     protected float health;
     protected float movementSpeed;
     protected float defenseMultiplier;
-    protected float meleeDamageAmount;
+    protected float normalDamageAmount;
     protected float normalAttackInterval;
 
     protected GameObject damagePopupObject;
     protected Animator damagePopupAnimator;
     protected TextMesh damagePopupText;
     protected float damagePopupYOffset = 1.5f;
+    protected bool canAttack;
 
     protected Vector3 startingPosition;
     protected bool isDead;
@@ -38,6 +39,7 @@ public class CharacterBaseController : MonoBehaviour
     public Vector2 GetStartingPosition() => startingPosition;
     public CharacterStatsSO GetCharacterStats() => characterStats;
     public void SetTarget(GameObject target) { this.target = target; }
+    public void SetCanAttack(bool canAttack) { this.canAttack = canAttack; }
 
     private void Awake()
     {
@@ -64,7 +66,7 @@ public class CharacterBaseController : MonoBehaviour
         health = characterStats.GetBaseHealth();
         movementSpeed = characterStats.GetBaseMovementSpeed();
         defenseMultiplier = characterStats.GetBaseDefenseMultiplier();
-        meleeDamageAmount = characterStats.GetNormalDamage();
+        normalDamageAmount = characterStats.GetNormalDamage();
         normalAttackInterval = characterStats.GetNormalAttackSpeed();
     }
 

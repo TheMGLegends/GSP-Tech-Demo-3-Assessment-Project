@@ -32,7 +32,21 @@ public class AggroDetection : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             if (enemyController != null)
+            {
                 enemyController.SetTarget(collision.gameObject);
+                enemyController.SetCanAttack(true);
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (enemyController != null)
+            {
+                enemyController.SetCanAttack(false);
+            }
         }
     }
 }

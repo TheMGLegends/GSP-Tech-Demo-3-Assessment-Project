@@ -29,13 +29,13 @@ public class PlayerController : CharacterBaseController
 
     // INFO: Meleeing System Variables/Components:
     private CircleCollider2D meleeAttackRange;
-    private bool canAttack;
     private float currentMeleeTime;
 
     // INFO: Animation Controller:
     private PlayerAnimationController animationController;
 
     public Vector2 GetMovementInput() => movementInput;
+    public PlayerHUDController GetPlayerHUDController() => playerHUDController;
 
     private void OnDrawGizmos()
     {
@@ -225,7 +225,7 @@ public class PlayerController : CharacterBaseController
     private IEnumerator MeleeDamageCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        //DamageManager.Instance.Damage(meleeDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());
+        //DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());
 
         //Testing Code:
         DamageManager.Instance.Damage(1000, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());

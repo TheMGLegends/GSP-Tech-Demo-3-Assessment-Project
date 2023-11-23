@@ -19,6 +19,9 @@ public class EnemyController : CharacterBaseController
     // INFO: Animation Controller:
     private EnemyAnimationController animationController;
 
+    // INFO: Attacking System:
+    private float currentAttackTime;
+
     public EnemyHUDController GetEnemyHUDController() => enemyHUDController;
 
     protected override void Start()
@@ -44,9 +47,37 @@ public class EnemyController : CharacterBaseController
     {
         if (target != null)
         {
+            if (!animationController.IsAnimationPlaying(EnemyAnimationController.RANGED_ATTACK))
+                animationController.ChangeAnimationState(EnemyAnimationController.IDLE);
+
             if (Vector2.Distance(transform.position, target.transform.position) > aggroDetection.GetStoppingDistanceFromTarget())
+            {    
                 transform.position = Vector2.MoveTowards(transform.position, target.transform.position, movementSpeed * Time.deltaTime);
+            }
+
+            if (canAttack)
+                AttackAction();
+            else
+                currentAttackTime = 0;
         }
+    }
+
+    private void AttackAction()
+    {
+        currentAttackTime += Time.deltaTime;
+
+        if (currentAttackTime > normalAttackInterval)
+        {
+            currentAttackTime = 0;
+            animationController.ChangeAnimationState(EnemyAnimationController.RANGED_ATTACK);
+            StartCoroutine(AttackCoroutine(animationController.GetAnimator().GetCurrentAnimatorStateInfo(0).length / 2));
+        }
+    }
+
+    private IEnumerator AttackCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<PlayerController>(), target.GetComponent<PlayerController>().GetPlayerHUDController());
     }
 
     protected override void DeathAction()
