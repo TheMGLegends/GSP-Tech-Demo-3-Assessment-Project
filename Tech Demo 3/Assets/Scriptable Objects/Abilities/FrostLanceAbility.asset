@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: FrostLanceAbility
   m_EditorClassIdentifier: 
   abilityType: 2
+  abilityName: Frost Lance
+  abilitySprite: {fileID: 21300000, guid: 50ea6e1b9b482d04387856a3b120aea9, type: 3}
   manaCost: 45
   castingTime: 0
   basePower: 10

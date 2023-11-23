@@ -45,7 +45,7 @@ public class EnemyController : CharacterBaseController
 
     private void Update()
     {
-        if (target != null)
+        if (target != null && !isDead)
         {
             if (!animationController.IsAnimationPlaying(EnemyAnimationController.RANGED_ATTACK))
                 animationController.ChangeAnimationState(EnemyAnimationController.IDLE);

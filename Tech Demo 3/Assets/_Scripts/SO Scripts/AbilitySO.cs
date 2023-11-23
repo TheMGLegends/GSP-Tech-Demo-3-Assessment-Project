@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,8 @@ public class AbilitySO : ScriptableObject
     }
 
     [SerializeField] private AbilityTypes abilityType;
+    [SerializeField] private string abilityName;
+    [SerializeField] private Sprite abilitySprite;
     [SerializeField, Min(0)] private int manaCost;
     [SerializeField, Min(0), Tooltip("Time until ability is cast in seconds.")] private float castingTime;
     [SerializeField, Min(0), Tooltip("Base damage of ability.")] private int basePower;
@@ -23,6 +26,8 @@ public class AbilitySO : ScriptableObject
 
     // INFO: Getter functions so variables can be accessed, but not changed
     public AbilityTypes GetAbilityType() => abilityType;
+    public string GetAbilityName() => abilityName;
+    public Sprite GetAbilitySprite() => abilitySprite;
     public int GetManaCost() => manaCost;
     public float GetCastingTime() => castingTime;
     public int GetBasePower() => basePower;

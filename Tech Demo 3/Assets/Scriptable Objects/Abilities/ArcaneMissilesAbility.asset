@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5467ce58cba7c84fbb24f8e9ed2e1c6, type: 3}
   m_Name: ArcaneMissilesAbility
   m_EditorClassIdentifier: 
+  abilityType: 0
+  abilityName: Arcane Missile
+  abilitySprite: {fileID: 21300000, guid: 7c76dfb07403db541ba90cda7aa88835, type: 3}
   manaCost: 150
   castingTime: 5
   basePower: 15

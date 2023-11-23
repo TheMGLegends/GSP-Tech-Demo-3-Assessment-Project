@@ -80,13 +80,18 @@ public class PlayerController : CharacterBaseController
     private void AnimateCharacter()
     {
         if (!animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING) &&
-            !animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_READY))
+            !animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_READY) &&
+            !animationController.IsAnimationPlaying(PlayerAnimationController.CAST))
         {
             if (movementInput != Vector2.zero)
                 animationController.ChangeAnimationState(PlayerAnimationController.WALK);
             else
                 animationController.ChangeAnimationState(PlayerAnimationController.IDLE);
         }
+
+        if (abilitiesController.GetIsCasting() &&
+            !animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING))
+            animationController.ChangeAnimationState(PlayerAnimationController.CAST);
     }
 
     private void Update()
@@ -199,7 +204,8 @@ public class PlayerController : CharacterBaseController
 
         if (canAttack && meleeAttackController.GetIsMeleeOn())
         {
-            if (!animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING))
+            if (!animationController.IsAnimationPlaying(PlayerAnimationController.MELEE_SWING) &&
+                !animationController.IsAnimationPlaying(PlayerAnimationController.CAST))
                 animationController.ChangeAnimationState(PlayerAnimationController.MELEE_READY);
 
             if (!target.GetComponent<EnemyController>().GetIsDead())
@@ -224,12 +230,12 @@ public class PlayerController : CharacterBaseController
     private IEnumerator MeleeDamageCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (target != null)
-            DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
+        //if (target != null)
+        //    DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
 
         //Testing Code:
-        //if (target != null)
-        //  DamageManager.Instance.Damage(1000, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
+        if (target != null)
+          DamageManager.Instance.Damage(1000, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
     }
 
     protected override void DeathAction()

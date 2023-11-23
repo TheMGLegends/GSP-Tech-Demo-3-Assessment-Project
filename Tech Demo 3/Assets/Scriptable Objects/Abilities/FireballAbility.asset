@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: FireballAbility
   m_EditorClassIdentifier: 
   abilityType: 1
+  abilityName: Fireball
+  abilitySprite: {fileID: 21300000, guid: 9a6736aa4b7149643b08a2890df2c69e, type: 3}
   manaCost: 120
   castingTime: 3
   basePower: 35

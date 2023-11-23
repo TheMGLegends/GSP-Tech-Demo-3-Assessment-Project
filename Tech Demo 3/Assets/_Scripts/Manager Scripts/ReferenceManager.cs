@@ -8,6 +8,7 @@ public class ReferenceManager : MonoBehaviour
 
     public GameObject playerObject;
     public GameObject damagePopupPrefab;
+    public GameObject spellPrefab;
 
     private void Awake()
     {
