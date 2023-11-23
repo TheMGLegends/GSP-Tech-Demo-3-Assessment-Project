@@ -6,6 +6,14 @@ public class DamageManager : MonoBehaviour
 {
     public static DamageManager Instance { get; private set; }
 
+    [SerializeField] private GameObject damagePopupPrefab;
+
+    [SerializeField] private float damagePopupMaxYOffset = 1.5f;
+    [SerializeField] private float damagePopupMinYOffset = 1.0f;
+
+    [SerializeField] private float damagePopupMaxXOffset = 0.5f;
+    [SerializeField] private float damagePopupMinXOffset = -0.5f;
+
     private const int hitChance = 80;
     private const int critChance = 20;
 
@@ -17,7 +25,7 @@ public class DamageManager : MonoBehaviour
             Instance = this;
     }
 
-    public void Damage(float damage, CharacterBaseController targetController, CharacterHUDController targetHUDController)
+    public void Damage(float damage, CharacterBaseController targetController, CharacterHUDController targetHUDController, Color textColor)
     {
         if (Random.Range(0, 101) <= hitChance)
         {
@@ -30,25 +38,20 @@ public class DamageManager : MonoBehaviour
                 Debug.Log("Crit hit!");
             }
 
-            targetController.GetDamagePopupText().text = ((int)damage).ToString();
-            StartCoroutine(ActivateDamagePopup(1, targetController));
+            GameObject GO = Instantiate(damagePopupPrefab, 
+                new Vector2(targetController.transform.position.x + Random.Range(damagePopupMinXOffset, damagePopupMaxXOffset), 
+                            targetController.transform.position.y + Random.Range(damagePopupMinYOffset, damagePopupMaxYOffset)), 
+                Quaternion.identity);
+            
+            GO.GetComponentInChildren<TextMesh>().color = textColor;
+            GO.GetComponentInChildren<TextMesh>().text = ((int)damage).ToString();
 
             targetController.ReduceHealth((int)damage);
             targetHUDController.SetHealth(targetController.GetHealth());
+
+            Destroy(GO, 1);
         }
         else
             Debug.Log("Missed hit!");
-    }
-
-    private IEnumerator ActivateDamagePopup(float duration, CharacterBaseController targetController)
-    {
-        GameObject damagePopupObject = targetController.GetDamagePopupObject();
-        Animator targetAnimator = targetController.GetDamagePopupAnimator();
-
-        damagePopupObject.SetActive(true);
-        targetAnimator.SetBool("IsFloating", true);
-        yield return new WaitForSeconds(duration);
-        targetAnimator.SetBool("IsFloating", false);
-        damagePopupObject.SetActive(false);
     }
 }

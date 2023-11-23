@@ -46,7 +46,6 @@ public class PlayerController : CharacterBaseController
     protected override void Start()
     {
         base.Start();
-        damagePopupText.color = Color.yellow;
 
         rb2D = GetComponent<Rigidbody2D>(); 
         playerCollider = GetComponent<BoxCollider2D>();
@@ -95,7 +94,7 @@ public class PlayerController : CharacterBaseController
         //Testing CODE:
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            DamageManager.Instance.Damage(1000, this, playerHUDController);
+            DamageManager.Instance.Damage(1000, this, playerHUDController, Color.yellow);
         }
 
 
@@ -225,15 +224,16 @@ public class PlayerController : CharacterBaseController
     private IEnumerator MeleeDamageCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        //DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());
+        if (target != null)
+            DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
 
         //Testing Code:
-        DamageManager.Instance.Damage(1000, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController());
+        //if (target != null)
+        //  DamageManager.Instance.Damage(1000, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
     }
 
     protected override void DeathAction()
     {
-        EnemyManager.Instance.ResetEnemies();
         playerCollider.enabled = false;
         DisableUI();
         characterAnimationController.ChangeAnimationState(PlayerAnimationController.DEAD);
@@ -247,6 +247,7 @@ public class PlayerController : CharacterBaseController
     protected override void AfterDeath()
     {
         base.AfterDeath();
+        EnemyManager.Instance.ResetEnemies();
         enabled = true;
         transform.position = startingPosition;
         InitializeStats();

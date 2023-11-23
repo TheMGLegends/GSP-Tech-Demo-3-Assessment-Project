@@ -77,7 +77,7 @@ public class EnemyController : CharacterBaseController
     private IEnumerator AttackCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<PlayerController>(), target.GetComponent<PlayerController>().GetPlayerHUDController());
+        DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<PlayerController>(), target.GetComponent<PlayerController>().GetPlayerHUDController(), Color.yellow);
     }
 
     protected override void DeathAction()
