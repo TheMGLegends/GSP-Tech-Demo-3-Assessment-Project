@@ -21,6 +21,7 @@ public class AbilitiesController : MonoBehaviour
     private float currentActivationTime;
 
     private bool isCasting;
+    private GameObject castingParticles;
 
     public bool GetIsCasting() => isCasting;
 
@@ -38,15 +39,21 @@ public class AbilitiesController : MonoBehaviour
         }
 
         ActivateCastingUI(false);
+        castingParticles = ReferenceManager.Instance.playerObject.transform.GetChild(1).gameObject;
     }
 
     private void Update()
     {
         if (isCasting)
         {
+            castingParticles.SetActive(true);
+
             currentActivationTime += Time.deltaTime;
 
-            castingBarSlider.value = currentActivationTime;
+            if (abilityDictionary[currentAbility].GetCastingTime() > 0)
+            {
+                castingBarSlider.value = currentActivationTime;
+            }
 
             if (currentActivationTime > castingInterval)
             {
@@ -55,10 +62,8 @@ public class AbilitiesController : MonoBehaviour
                 GameObject GO = Instantiate(ReferenceManager.Instance.spellPrefab, ReferenceManager.Instance.playerObject.transform.position, Quaternion.identity);
                 GO.GetComponent<SpriteRenderer>().sprite = abilityDictionary[currentAbility].GetAbilitySprite();
 
-                castingBarSlider.value = castingBarSlider.minValue;
-                abilityNameText.text = "";
-
                 isCasting = false;
+                castingParticles.SetActive(false);
             }
         }
     }
@@ -80,32 +85,42 @@ public class AbilitiesController : MonoBehaviour
         }
     }
 
-    public void AbilityPress(int abilityType)
+    public void AbilityPress(AbilitySO ability)
     {
-        switch ((AbilitySO.AbilityTypes)abilityType)
-        {
-            case AbilitySO.AbilityTypes.ArcaneMissile:
-                currentAbility = AbilitySO.AbilityTypes.ArcaneMissile;
-                break;
-            case AbilitySO.AbilityTypes.Fireball:
-                currentAbility = AbilitySO.AbilityTypes.Fireball;
-                break;
-            case AbilitySO.AbilityTypes.FrostLance:
-                currentAbility = AbilitySO.AbilityTypes.FrostLance;
-                break;
-            case AbilitySO.AbilityTypes.MageArmor:
-                currentAbility = AbilitySO.AbilityTypes.MageArmor;
-                break;
-            default:
-                break;
-        }
+        //switch (ability.GetAbilityType())
+        //{
+        //    case AbilitySO.AbilityTypes.ArcaneMissile:
+        //        break;
+        //    case AbilitySO.AbilityTypes.Fireball:
+        //        break;
+        //    case AbilitySO.AbilityTypes.FrostLance:
+        //        break;
+        //    case AbilitySO.AbilityTypes.MageArmor:
+        //        break;
+        //    default:
+        //        break;
+        //}
 
-        if (abilityDictionary.ContainsKey(currentAbility))
+        castingBarSlider.value = castingBarSlider.minValue;
+        abilityNameText.text = "";
+
+        if (abilityDictionary.ContainsKey(ability.GetAbilityType()))
         {
             isCasting = true;
+            currentAbility = ability.GetAbilityType();
             currentActivationTime = 0;
             castingInterval = abilityDictionary[currentAbility].GetCastingTime();
-            castingBarSlider.maxValue = abilityDictionary[currentAbility].GetCastingTime();
+
+            if (castingInterval <= 0)
+            {
+                castingBarSlider.maxValue = 1.0f;
+                castingBarSlider.value = castingBarSlider.maxValue;
+            }
+            else
+            {
+                castingBarSlider.maxValue = abilityDictionary[currentAbility].GetCastingTime();
+            }
+
             abilityNameText.text = abilityDictionary[currentAbility].GetAbilityName();
         }
     }
