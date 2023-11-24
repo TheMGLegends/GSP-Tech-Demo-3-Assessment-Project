@@ -23,6 +23,7 @@ public class AbilitySO : ScriptableObject
     [SerializeField, Min(0), Tooltip("Base damage of ability.")] private int basePower;
     [SerializeField, Min(0), Tooltip("Length of time until usable again in seconds.")] private float cooldown;
     [SerializeField] private StatusEffectSO statusEffect;
+    [SerializeField] private int numberOfCasts;
 
     // INFO: Getter functions so variables can be accessed, but not changed
     public AbilityTypes GetAbilityType() => abilityType;
@@ -33,4 +34,5 @@ public class AbilitySO : ScriptableObject
     public int GetBasePower() => basePower;
     public float GetCooldown() => cooldown;
     public StatusEffectSO GetStatusEffect() => statusEffect;
+    public int GetNumberOfCasts() => numberOfCasts;
 }

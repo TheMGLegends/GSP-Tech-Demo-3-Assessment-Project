@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerHUDController : CharacterHUDController
 {
-    public void SetMana(float newMana)
+    public override void SetMana(float newMana)
     {
         manaSlider.value = newMana;
         manaText.text = manaSlider.value + "/" + maxMana;

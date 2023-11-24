@@ -48,4 +48,8 @@ public class CharacterHUDController : MonoBehaviour
         healthSlider.value = newHealth;
         healthText.text = healthSlider.value + "/" + maxHealth;
     }
+
+    public virtual void SetMana(float newMana)
+    {
+    }
 }

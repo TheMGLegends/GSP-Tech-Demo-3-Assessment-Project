@@ -18,7 +18,10 @@ public class AbilitiesController : MonoBehaviour
     private TMP_Text abilityNameText;
 
     private float castingInterval;
-    private float currentActivationTime;
+    private float currentCastingTime;
+    private float tickInterval;
+
+    private float manaCost;
 
     private bool isCasting;
     private GameObject castingParticles;
@@ -44,26 +47,40 @@ public class AbilitiesController : MonoBehaviour
 
     private void Update()
     {
-        if (isCasting)
+        if (isCasting && (currentAbility == AbilitySO.AbilityTypes.ArcaneMissile || currentAbility == AbilitySO.AbilityTypes.Fireball))
         {
             castingParticles.SetActive(true);
 
-            currentActivationTime += Time.deltaTime;
+            currentCastingTime += Time.deltaTime;
+            castingBarSlider.value = currentCastingTime / castingInterval;
 
-            if (abilityDictionary[currentAbility].GetCastingTime() > 0)
+            if (currentCastingTime > castingInterval)
             {
-                castingBarSlider.value = currentActivationTime;
-            }
-
-            if (currentActivationTime > castingInterval)
-            {
-                currentActivationTime = 0;
-
-                GameObject GO = Instantiate(ReferenceManager.Instance.spellPrefab, ReferenceManager.Instance.playerObject.transform.position, Quaternion.identity);
-                GO.GetComponent<SpriteRenderer>().sprite = abilityDictionary[currentAbility].GetAbilitySprite();
-
+                currentCastingTime = 0;
                 isCasting = false;
                 castingParticles.SetActive(false);
+
+                InstantiateSpell();
+                DeductPlayersMana();
+            }
+
+            if (currentAbility == AbilitySO.AbilityTypes.ArcaneMissile)
+            {
+                if (ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetMovementInput() != Vector2.zero)
+                {
+                    currentCastingTime = 0;
+                    tickInterval = castingInterval / abilityDictionary[currentAbility].GetNumberOfCasts();
+                    castingBarSlider.value = castingBarSlider.minValue;
+                    StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
+                }
+
+                if (currentCastingTime > tickInterval)
+                {
+                    tickInterval++;
+
+                    InstantiateSpell();
+                    DeductPlayersMana();
+                }
             }
         }
     }
@@ -87,41 +104,90 @@ public class AbilitiesController : MonoBehaviour
 
     public void AbilityPress(AbilitySO ability)
     {
-        //switch (ability.GetAbilityType())
-        //{
-        //    case AbilitySO.AbilityTypes.ArcaneMissile:
-        //        break;
-        //    case AbilitySO.AbilityTypes.Fireball:
-        //        break;
-        //    case AbilitySO.AbilityTypes.FrostLance:
-        //        break;
-        //    case AbilitySO.AbilityTypes.MageArmor:
-        //        break;
-        //    default:
-        //        break;
-        //}
+        if (!abilityDictionary.ContainsKey(ability.GetAbilityType()))
+            return;
 
-        castingBarSlider.value = castingBarSlider.minValue;
-        abilityNameText.text = "";
+        currentAbility = ability.GetAbilityType();
 
-        if (abilityDictionary.ContainsKey(ability.GetAbilityType()))
+        isCasting = true;
+        currentCastingTime = 0;
+        castingInterval = abilityDictionary[currentAbility].GetCastingTime();
+        abilityNameText.text = abilityDictionary[currentAbility].GetAbilityName();
+        manaCost = abilityDictionary[currentAbility].GetManaCost();
+
+        if (ability.GetCastingTime() <= 0)
         {
-            isCasting = true;
-            currentAbility = ability.GetAbilityType();
-            currentActivationTime = 0;
-            castingInterval = abilityDictionary[currentAbility].GetCastingTime();
-
-            if (castingInterval <= 0)
-            {
-                castingBarSlider.maxValue = 1.0f;
-                castingBarSlider.value = castingBarSlider.maxValue;
-            }
-            else
-            {
-                castingBarSlider.maxValue = abilityDictionary[currentAbility].GetCastingTime();
-            }
-
-            abilityNameText.text = abilityDictionary[currentAbility].GetAbilityName();
+            castingBarSlider.value = castingBarSlider.maxValue;
         }
+        else
+        {
+            castingBarSlider.value = castingBarSlider.minValue;
+        }
+
+        switch (currentAbility)
+        {
+            case AbilitySO.AbilityTypes.ArcaneMissile:
+                ArcaneMissileAbility();
+                break;
+            case AbilitySO.AbilityTypes.Fireball:
+                FireballAbility();
+                break;
+            case AbilitySO.AbilityTypes.FrostLance:
+                FrostLanceAbility();
+                break;
+            case AbilitySO.AbilityTypes.MageArmor:
+                MageArmorAbility();
+                break;
+        }
+    }
+
+    // Casting Spell:
+    private void ArcaneMissileAbility()
+    {
+        tickInterval = castingInterval / abilityDictionary[currentAbility].GetNumberOfCasts();
+        manaCost /= abilityDictionary[currentAbility].GetNumberOfCasts();
+    }
+
+    // Casting Spell:
+    private void FireballAbility()
+    {
+
+    }
+
+    // Instant Spell:
+    private void FrostLanceAbility()
+    {
+        castingParticles.SetActive(true);
+        StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
+        InstantiateSpell();
+        DeductPlayersMana();
+    }
+
+    // Instant Spell:
+    private void MageArmorAbility()
+    {
+        castingParticles.SetActive(true);
+        StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
+        DeductPlayersMana();
+    }
+
+    private void InstantiateSpell()
+    {
+        GameObject GO = Instantiate(ReferenceManager.Instance.spellPrefab, ReferenceManager.Instance.playerObject.transform.position, Quaternion.identity);
+        GO.GetComponent<SpellController>().GetTargetAndAbilityInfo(ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().GetTarget(), abilityDictionary[currentAbility]);
+        GO.GetComponent<SpriteRenderer>().sprite = abilityDictionary[currentAbility].GetAbilitySprite();
+    }
+
+    private IEnumerator ParticleCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        isCasting = false;
+        castingParticles.SetActive(false);
+    }
+
+    private void DeductPlayersMana()
+    {
+        ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().ReduceMana(manaCost);
+        ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().GetCharacterHUDController().SetMana(ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetMana());
     }
 }

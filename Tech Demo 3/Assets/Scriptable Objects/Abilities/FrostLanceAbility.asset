@@ -20,3 +20,4 @@ MonoBehaviour:
   basePower: 10
   cooldown: 0.5
   statusEffect: {fileID: 11400000, guid: 6bf88ba043c52134e8916ea4655085ad, type: 2}
+  numberOfCasts: 1

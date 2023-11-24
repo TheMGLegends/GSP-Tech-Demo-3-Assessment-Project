@@ -21,6 +21,7 @@ public class CharacterBaseController : MonoBehaviour
     protected bool isDead;
 
     protected CharacterAnimationController characterAnimationController;
+    protected CharacterHUDController characterHUDController;
 
     protected GameObject target;
 
@@ -28,6 +29,7 @@ public class CharacterBaseController : MonoBehaviour
     public float GetDefenseMultiplier() => defenseMultiplier;
     public bool GetIsDead() => isDead;
     public CharacterAnimationController GetCharacterAnimationController() => characterAnimationController;
+    public virtual CharacterHUDController GetCharacterHUDController() => characterHUDController;
     public GameObject GetTarget() => target;
     public Vector2 GetStartingPosition() => startingPosition;
     public CharacterStatsSO GetCharacterStats() => characterStats;
@@ -63,6 +65,11 @@ public class CharacterBaseController : MonoBehaviour
             isDead = true;
             DeathAction();
         }
+    }
+
+    public virtual void ReduceMana(float manaCost)
+    {
+
     }
 
     protected virtual void DeathAction()

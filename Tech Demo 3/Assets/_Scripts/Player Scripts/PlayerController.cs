@@ -38,6 +38,8 @@ public class PlayerController : CharacterBaseController
 
     public Vector2 GetMovementInput() => movementInput;
     public PlayerHUDController GetPlayerHUDController() => playerHUDController;
+    public override CharacterHUDController GetCharacterHUDController() => playerHUDController;
+    public float GetMana() => mana;
 
     private void OnDrawGizmos()
     {
@@ -102,6 +104,12 @@ public class PlayerController : CharacterBaseController
         if (Input.GetKeyDown(KeyCode.Space))
         {
             DamageManager.Instance.Damage(1000, this, playerHUDController, Color.yellow);
+        }
+
+        if (target != null)
+        {
+            if (target.GetComponent<CharacterBaseController>().GetIsDead())
+                Invoke(nameof(DisableUI), 0.5f);
         }
 
 
@@ -265,5 +273,10 @@ public class PlayerController : CharacterBaseController
         characterAnimationController.GetAnimator().SetFloat("MovementY", -1);
         animationController.SetFacingDirection(1);
         characterAnimationController.ChangeAnimationState(PlayerAnimationController.IDLE);
+    }
+
+    public override void ReduceMana(float manaCost)
+    {
+        mana -= manaCost;
     }
 }

@@ -23,6 +23,7 @@ public class EnemyController : CharacterBaseController
     private float currentAttackTime;
 
     public EnemyHUDController GetEnemyHUDController() => enemyHUDController;
+    public override CharacterHUDController GetCharacterHUDController() => enemyHUDController;
 
     protected override void Start()
     {

@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: ToxicSpitAbility
   m_EditorClassIdentifier: 
   abilityType: 4
+  abilityName: 
+  abilitySprite: {fileID: 0}
   manaCost: 0
   castingTime: 2.5
   basePower: 0
   cooldown: 0
   statusEffect: {fileID: 11400000, guid: 3cfd2c7a34db9cd43b261509bb99b7ae, type: 2}
+  numberOfCasts: 1
