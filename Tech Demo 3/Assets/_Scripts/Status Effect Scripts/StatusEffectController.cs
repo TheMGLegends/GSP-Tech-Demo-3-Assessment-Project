@@ -49,7 +49,7 @@ public class StatusEffectController : MonoBehaviour
     private void ApplyStatusEffect()
     {
         GameObject GO = Instantiate(statusEffectPrefab, charactersEffectsPanel.transform);
-        GO.GetComponent<EffectDurationController>().SetStatusEffect(usedSpellInfo.GetStatusEffect());
+        GO.GetComponent<EffectDurationController>().SetEffectDurationInfo(usedSpellInfo.GetStatusEffect(), this);
         effectsList.Add(GO);
     }
 
@@ -64,7 +64,10 @@ public class StatusEffectController : MonoBehaviour
     {
         for (int i = 0; i < effectsList.Count; i++)
         {
-            effectsList[i].SetActive(false);
+            foreach (Transform child in effectsList[i].transform)
+            {
+                child.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -72,7 +75,15 @@ public class StatusEffectController : MonoBehaviour
     {
         for (int i = 0; i < effectsList.Count; i++)
         {
-            effectsList[i].SetActive(true);
+            foreach (Transform child in effectsList[i].transform)
+            {
+                child.gameObject.SetActive(true);
+            }
         }
+    }
+
+    public void RemoveGOFromList(GameObject objectToRemove)
+    {
+        effectsList.Remove(objectToRemove);
     }
 }
