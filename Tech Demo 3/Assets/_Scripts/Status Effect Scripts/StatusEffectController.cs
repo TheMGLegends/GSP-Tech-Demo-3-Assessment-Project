@@ -13,8 +13,7 @@ public class StatusEffectController : MonoBehaviour
 
     private AbilitySO usedSpellInfo;
 
-    private int currentFrostLanceStack;
-    private readonly int maxFrostLanceStack = 5;
+    private readonly int maxFrostLanceStack = 3;
 
     private void Start()
     {
@@ -36,6 +35,13 @@ public class StatusEffectController : MonoBehaviour
                 {
                     if (effectsList[i].GetComponent<EffectDurationController>().GetCurrentFrostLanceStack() < maxFrostLanceStack)
                         effectsList[i].GetComponent<EffectDurationController>().IncrementFrostLanceStack();
+                    else if (effectsList[i].GetComponent<EffectDurationController>().GetCurrentFrostLanceStack() >= maxFrostLanceStack)
+                    {
+                        GameObject GO = effectsList[i];
+                        Destroy(GO);
+                        effectsList.Remove(GO);
+                        gameObject.GetComponent<CharacterBaseController>().SetMovementSpeed(gameObject.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseMovementSpeed());
+                    } 
                     else if (effectsList[i].GetComponent<EffectDurationController>().GetCurrentFrostLanceStack() == 0)
                         continue;
                 }
@@ -85,5 +91,17 @@ public class StatusEffectController : MonoBehaviour
     public void RemoveGOFromList(GameObject objectToRemove)
     {
         effectsList.Remove(objectToRemove);
+    }
+
+    public int SearchEffectsList(StatusEffectSO.StatusEffectTypes effectType)
+    {
+        for (int i = 0; i < effectsList.Count; i++)
+        {
+            if (effectsList[i].GetComponent<EffectDurationController>().GetStatusEffect().GetStatusEffectType() == effectType)
+            {
+                return effectsList[i].GetComponent<EffectDurationController>().GetCurrentFrostLanceStack();
+            }
+        }
+        return 0;
     }
 }

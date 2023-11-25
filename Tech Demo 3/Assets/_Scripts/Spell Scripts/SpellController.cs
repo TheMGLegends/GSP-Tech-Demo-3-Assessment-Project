@@ -41,11 +41,19 @@ public class SpellController : MonoBehaviour
                 floatingNumberColor = Color.yellow;
             }
 
+            int frostLanceStack = 0;
+
+            if (abilityInfo.GetAbilityType() == AbilitySO.AbilityTypes.FrostLance)
+                frostLanceStack = target.GetComponent<StatusEffectController>().SearchEffectsList(StatusEffectSO.StatusEffectTypes.FrostLanceEffect) + 2;
+
 
             if (!target.GetComponent<CharacterBaseController>().GetIsDead())
             {
-                spellResult = DamageManager.Instance.Damage(abilityInfo.GetBasePower(), target.GetComponent<CharacterBaseController>(), target.GetComponent<CharacterBaseController>().GetCharacterHUDController(), floatingNumberColor);
-                
+                if (frostLanceStack > 4)
+                    spellResult = DamageManager.Instance.Damage(abilityInfo.GetBasePower() + 20, target.GetComponent<CharacterBaseController>(), target.GetComponent<CharacterBaseController>().GetCharacterHUDController(), floatingNumberColor);
+                else
+                    spellResult = DamageManager.Instance.Damage(abilityInfo.GetBasePower(), target.GetComponent<CharacterBaseController>(), target.GetComponent<CharacterBaseController>().GetCharacterHUDController(), floatingNumberColor);
+
                 if (spellResult != AttackResultStrings.hasMissed)
                     CheckAffectedEntity();
             }

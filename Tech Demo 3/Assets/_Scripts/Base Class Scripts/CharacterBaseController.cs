@@ -26,6 +26,7 @@ public class CharacterBaseController : MonoBehaviour
     protected GameObject target;
 
     public float GetHealth() => health;
+    public float GetMovementSpeed() => movementSpeed;
     public float GetDefenseMultiplier() => defenseMultiplier;
     public bool GetIsDead() => isDead;
     public CharacterAnimationController GetCharacterAnimationController() => characterAnimationController;
@@ -35,6 +36,7 @@ public class CharacterBaseController : MonoBehaviour
     public CharacterStatsSO GetCharacterStats() => characterStats;
     public void SetTarget(GameObject target) { this.target = target; }
     public void SetCanAttack(bool canAttack) { this.canAttack = canAttack; }
+    public void SetMovementSpeed(float movementSpeed) {  this.movementSpeed = movementSpeed; }
 
     private void Awake()
     {
@@ -69,7 +71,6 @@ public class CharacterBaseController : MonoBehaviour
 
     public virtual void ReduceMana(float manaCost)
     {
-
     }
 
     protected virtual void DeathAction()
