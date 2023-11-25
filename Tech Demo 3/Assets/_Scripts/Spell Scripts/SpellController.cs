@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class SpellController : MonoBehaviour
 {
-    private AbilitySO abilityInfo;
+    private GameObject caster;
     private GameObject target;
+    private AbilitySO abilityInfo;
 
     private float spellSpeed = 5f;
 
     private Color floatingNumberColor;
+
+    private string spellResult;
 
     private void Update()
     {
@@ -27,8 +30,6 @@ public class SpellController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject.tag);
-
         if (collision.gameObject.CompareTag(target.tag))
         {
             if (target.CompareTag("Enemy"))
@@ -41,16 +42,41 @@ public class SpellController : MonoBehaviour
             }
 
 
-            if (!target.GetComponent<CharacterBaseController>().GetIsDead()) 
-                DamageManager.Instance.Damage(abilityInfo.GetBasePower(), target.GetComponent<CharacterBaseController>(), target.GetComponent<CharacterBaseController>().GetCharacterHUDController(), floatingNumberColor);
+            if (!target.GetComponent<CharacterBaseController>().GetIsDead())
+            {
+                spellResult = DamageManager.Instance.Damage(abilityInfo.GetBasePower(), target.GetComponent<CharacterBaseController>(), target.GetComponent<CharacterBaseController>().GetCharacterHUDController(), floatingNumberColor);
+                
+                if (spellResult != AttackResultStrings.hasMissed)
+                    CheckAffectedEntity();
+            }
 
             Destroy(gameObject);
         }
     }
 
-
-    public void GetTargetAndAbilityInfo(GameObject target, AbilitySO abilityInfo)
+    private void CheckAffectedEntity()
     {
+        switch (abilityInfo.GetAbilityType())
+        {
+            case AbilitySO.AbilityTypes.ArcaneMissile:
+                if (spellResult == AttackResultStrings.hasCrit)
+                    caster.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo);
+                break;
+            case AbilitySO.AbilityTypes.Fireball:
+                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo);
+                break;
+            case AbilitySO.AbilityTypes.FrostLance:
+                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo);
+                break;
+            case AbilitySO.AbilityTypes.ToxicSpit:
+                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo);
+                break;
+        }
+    }
+
+    public void GatherInfo(GameObject caster, GameObject target, AbilitySO abilityInfo)
+    {
+        this.caster = caster;
         this.target = target;
         this.abilityInfo = abilityInfo;
     }

@@ -17,6 +17,8 @@ public class DamageManager : MonoBehaviour
     private const int hitChance = 80;
     private const int critChance = 20;
 
+    private string returnValue;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -25,18 +27,19 @@ public class DamageManager : MonoBehaviour
             Instance = this;
     }
 
-    public void Damage(float damage, CharacterBaseController targetController, CharacterHUDController targetHUDController, Color textColor)
+    public string Damage(float damage, CharacterBaseController targetController, CharacterHUDController targetHUDController, Color textColor)
     {
         if (Random.Range(0, 101) <= hitChance)
         {
-            Debug.Log("Hit hit!");
             damage *= Random.Range(0.75f, 1.25f) * targetController.GetDefenseMultiplier();
 
             if (Random.Range(0, 101) <= critChance)
             {
                 damage *= 2;
-                Debug.Log("Crit hit!");
+                returnValue = AttackResultStrings.hasCrit;
             }
+            else
+                returnValue = AttackResultStrings.hasHit;
 
             GameObject GO = Instantiate(damagePopupPrefab, 
                 new Vector2(targetController.transform.position.x + Random.Range(damagePopupMinXOffset, damagePopupMaxXOffset), 
@@ -52,6 +55,10 @@ public class DamageManager : MonoBehaviour
             Destroy(GO, 1);
         }
         else
-            Debug.Log("Missed hit!");
+        {
+            returnValue = AttackResultStrings.hasMissed;
+        }
+
+        return returnValue;
     }
 }

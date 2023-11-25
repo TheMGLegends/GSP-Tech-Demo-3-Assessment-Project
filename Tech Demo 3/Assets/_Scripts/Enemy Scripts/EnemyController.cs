@@ -137,6 +137,7 @@ public class EnemyController : CharacterBaseController
     {
         transform.position = startingPosition;
         target = null;
+        waypointIndex = 0;
         health = enemyHUDController.GetMaxHealth();
         enemyHUDController.SetHealth(health);
         enemyCollider.enabled = true;

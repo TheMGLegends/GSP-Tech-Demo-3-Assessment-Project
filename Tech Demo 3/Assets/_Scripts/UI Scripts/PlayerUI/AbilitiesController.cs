@@ -210,12 +210,13 @@ public class AbilitiesController : MonoBehaviour
         castingParticles.SetActive(true);
         StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
         DeductPlayersMana();
+        ReferenceManager.Instance.playerObject.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityTypesDictionary[currentAbility]);
     }
 
     private void InstantiateSpell()
     {
         GameObject GO = Instantiate(ReferenceManager.Instance.spellPrefab, ReferenceManager.Instance.playerObject.transform.position, Quaternion.identity);
-        GO.GetComponent<SpellController>().GetTargetAndAbilityInfo(ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().GetTarget(), abilityTypesDictionary[currentAbility]);
+        GO.GetComponent<SpellController>().GatherInfo(ReferenceManager.Instance.playerObject, ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().GetTarget(), abilityTypesDictionary[currentAbility]);
         GO.GetComponent<SpriteRenderer>().sprite = abilityTypesDictionary[currentAbility].GetAbilitySprite();
     }
 

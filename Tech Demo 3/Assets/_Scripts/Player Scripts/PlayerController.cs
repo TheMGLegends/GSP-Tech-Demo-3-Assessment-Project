@@ -1,7 +1,4 @@
-using System;
 using System.Collections;
-using System.Linq.Expressions;
-using Unity.Android.Types;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -161,22 +158,33 @@ public class PlayerController : CharacterBaseController
 
         if (hit != false && hit.collider != null)
         {
-            if (hit.collider.gameObject.CompareTag("Enemy"))
+            if (hit.collider.gameObject.CompareTag("Ground") && target != null)
             {
-                target = hit.collider.gameObject;
-                target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(true, target);
-                meleeAttackController.gameObject.SetActive(true);
-                abilitiesController.ActivateCastingUI(true);
-            }
-            else if ((hit.collider.gameObject.CompareTag("Enemy") && target != null) || 
-                     (hit.collider.gameObject.CompareTag("Ground") && target != null))
-            {
+                target.GetComponent<StatusEffectController>().DisableEffectsList();
                 DisableUI();
+            }
+            else if (hit.collider.gameObject.CompareTag("Enemy") && target != null)
+            {
+                target.GetComponent<StatusEffectController>().DisableEffectsList();
+                EnableUI(hit);
+            }
+            else if (hit.collider.gameObject.CompareTag("Enemy"))
+            {
+                EnableUI(hit);
             }
 
             if (meleeAttackController.GetIsMeleeOn())
                 meleeAttackController.ToggleButton();
         }
+    }
+
+    private void EnableUI(RaycastHit2D hit)
+    {
+        target = hit.collider.gameObject;
+        target.GetComponent<StatusEffectController>().EnableEffectsList();
+        target.GetComponent<EnemyController>().GetEnemyHUDController().DisplayProfile(true, target);
+        meleeAttackController.gameObject.SetActive(true);
+        abilitiesController.ActivateCastingUI(true);
     }
 
     private void DisableUI()
