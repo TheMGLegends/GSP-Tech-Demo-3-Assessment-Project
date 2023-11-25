@@ -29,19 +29,6 @@ public class EffectDurationController : MonoBehaviour
         backgroundColor = transform.GetChild(1).GetComponent<Image>();
     }
 
-    //private void Update()
-    //{
-    //    effectDuration -= Time.deltaTime;
-    //    effectDurationText.text = effectDuration.ToString("F1");
-    //
-    //    if (effectDuration <= 0)
-    //    {
-    //        affectedEntity.RemoveGOFromList(gameObject);
-    //        Destroy(gameObject);
-    //    }
-    //}
-
-
     public void SetEffectDurationInfo(StatusEffectSO statusEffect, StatusEffectController affectedEntity) 
     { 
         this.statusEffect = statusEffect; 
