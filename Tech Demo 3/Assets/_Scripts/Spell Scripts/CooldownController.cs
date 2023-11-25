@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class CooldownController : MonoBehaviour
 {
-    private bool isSpellOnCooldown;
     private float cooldownDuration;
     private TMP_Text cooldownText;
 
@@ -15,29 +14,27 @@ public class CooldownController : MonoBehaviour
         cooldownText = GetComponentInChildren<TMP_Text>();
     }
 
-    private void Update()
-    {
-        if (isSpellOnCooldown)
-        {
-            cooldownDuration -= Time.deltaTime;
-            cooldownText.text = cooldownDuration.ToString("F1");
-
-            if (cooldownDuration <= 0)
-            {
-                isSpellOnCooldown = false;
-                gameObject.SetActive(false);
-            }
-        }
-    }
-
     public void ActivateCooldown( float cooldownDuration )
     {
-        isSpellOnCooldown = true;
         this.cooldownDuration = cooldownDuration;
 
         if (cooldownText == null)
             cooldownText = GetComponentInChildren<TMP_Text>();
 
         cooldownText.text = cooldownDuration.ToString("F1");
+
+        InvokeRepeating(nameof(Cooldown), 0, Time.deltaTime);
+    }
+
+    private void Cooldown()
+    {
+        cooldownDuration -= Time.deltaTime;
+        cooldownText.text = cooldownDuration.ToString("F1");
+
+        if (cooldownDuration <= 0)
+        {
+            gameObject.SetActive(false);
+            CancelInvoke(nameof(Cooldown));
+        }
     }
 }
