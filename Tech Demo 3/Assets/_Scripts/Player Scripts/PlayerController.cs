@@ -21,6 +21,7 @@ public class PlayerController : CharacterBaseController
     // INFO: Player Stats Variables:
     private float mana;
     private float manaRegen;
+    private float maxMana;
 
     // INFO: Movement Variables/Components:
     private Rigidbody2D rb2D;
@@ -33,8 +34,6 @@ public class PlayerController : CharacterBaseController
 
     // INFO: Animation Controller:
     private PlayerAnimationController animationController;
-
-    // INFO: Casting Particles:
 
     public Vector2 GetMovementInput() => movementInput;
     public PlayerHUDController GetPlayerHUDController() => playerHUDController;
@@ -57,6 +56,7 @@ public class PlayerController : CharacterBaseController
         meleeAttackRange.radius = meleeAttackRadius;
 
         animationController = GetComponent<PlayerAnimationController>();
+        maxMana = characterStats.GetBaseMana();
     }
 
     protected override void InitializeStats()
@@ -66,6 +66,7 @@ public class PlayerController : CharacterBaseController
         manaRegen = characterStats.GetBaseManaRegen();
 
         playerHUDController.InitializeBars(health, mana);
+        InvokeRepeating(nameof(RegenMana), 1f, 1f);
     }
 
     private void GetInputAxis()
@@ -278,5 +279,16 @@ public class PlayerController : CharacterBaseController
     public override void ReduceMana(float manaCost)
     {
         mana -= manaCost;
+    }
+
+    private void RegenMana()
+    {
+        mana += manaRegen;
+
+        if (mana > maxMana)
+            mana = maxMana;
+
+        playerHUDController.SetMana(mana);
+        abilitiesController.CheckSpellUsability();
     }
 }

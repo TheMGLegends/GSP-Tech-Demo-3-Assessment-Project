@@ -8,7 +8,10 @@ public class AbilitiesController : MonoBehaviour
 {
     public List<AbilitySO.AbilityTypes> abilityTypesList = new();
     [SerializeField] private List<AbilitySO> abilityStatsList = new();
-    [SerializeField] private Dictionary<AbilitySO.AbilityTypes, AbilitySO> abilityDictionary = new();
+    [SerializeField] private Dictionary<AbilitySO.AbilityTypes, AbilitySO> abilityTypesDictionary = new();
+    
+    [SerializeField] private List<GameObject> abilityButtonsList = new();
+    [SerializeField] private Dictionary<AbilitySO.AbilityTypes, GameObject> abilityButtonsDictionary = new();
 
     private AbilitySO.AbilityTypes currentAbility;
 
@@ -32,7 +35,8 @@ public class AbilitiesController : MonoBehaviour
     {
         for (int i = 0; i < abilityTypesList.Count; i++)
         {
-            abilityDictionary.Add(abilityTypesList[i], abilityStatsList[i]);
+            abilityTypesDictionary.Add(abilityTypesList[i], abilityStatsList[i]);
+            abilityButtonsDictionary.Add(abilityTypesList[i], abilityButtonsList[i]);
         }
 
         if (castingBar != null)
@@ -41,11 +45,40 @@ public class AbilitiesController : MonoBehaviour
             abilityNameText = castingBar.GetComponentInChildren<TMP_Text>();
         }
 
-        ActivateCastingUI(false);
         castingParticles = ReferenceManager.Instance.playerObject.transform.GetChild(1).gameObject;
+
+        CheckSpellUsability();
+
+        ActivateCastingUI(false);
     }
 
     private void Update()
+    {
+        CastSpells();
+    }
+
+    public void CheckSpellUsability()
+    {
+        for (int i = 0; i < abilityTypesDictionary.Count; i++)
+        {
+            GameObject buttonChild = abilityButtonsDictionary[(AbilitySO.AbilityTypes)i].transform.GetChild(2).gameObject;
+            GameObject cooldownChild = abilityButtonsDictionary[(AbilitySO.AbilityTypes)i].transform.GetChild(3).gameObject;
+            GameObject unusableChild = abilityButtonsDictionary[(AbilitySO.AbilityTypes)i].transform.GetChild(4).gameObject;
+
+            if (abilityTypesDictionary[(AbilitySO.AbilityTypes)i].GetManaCost() > ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetMana())
+            {
+                buttonChild.GetComponent<Button>().interactable = false;
+                unusableChild.SetActive(true);
+            }
+            else
+            {
+                unusableChild.SetActive(false);
+                buttonChild.GetComponent<Button>().interactable = true;
+            }
+        }
+    }
+
+    private void CastSpells()
     {
         if (isCasting && (currentAbility == AbilitySO.AbilityTypes.ArcaneMissile || currentAbility == AbilitySO.AbilityTypes.Fireball))
         {
@@ -68,8 +101,10 @@ public class AbilitiesController : MonoBehaviour
             {
                 if (ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetMovementInput() != Vector2.zero)
                 {
+                    isCasting = false;
+                    abilityNameText.text = "";
                     currentCastingTime = 0;
-                    tickInterval = castingInterval / abilityDictionary[currentAbility].GetNumberOfCasts();
+                    tickInterval = castingInterval / abilityTypesDictionary[currentAbility].GetNumberOfCasts();
                     castingBarSlider.value = castingBarSlider.minValue;
                     StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
                 }
@@ -87,11 +122,14 @@ public class AbilitiesController : MonoBehaviour
 
     public void ActivateCastingUI(bool activate)
     {
+        isCasting = false;
+        castingParticles.SetActive(false);
+
+        castingBarSlider.value = castingBarSlider.minValue;
+        abilityNameText.text = "";
+
         if (activate)
         {
-            castingBarSlider.value = castingBarSlider.minValue;
-            abilityNameText.text = "";
-
             castingBar.SetActive(true);
             gameObject.SetActive(true);
         }
@@ -104,16 +142,15 @@ public class AbilitiesController : MonoBehaviour
 
     public void AbilityPress(AbilitySO ability)
     {
-        if (!abilityDictionary.ContainsKey(ability.GetAbilityType()))
+        if (!abilityTypesDictionary.ContainsKey(ability.GetAbilityType()))
             return;
 
         currentAbility = ability.GetAbilityType();
 
-        isCasting = true;
         currentCastingTime = 0;
-        castingInterval = abilityDictionary[currentAbility].GetCastingTime();
-        abilityNameText.text = abilityDictionary[currentAbility].GetAbilityName();
-        manaCost = abilityDictionary[currentAbility].GetManaCost();
+        castingInterval = abilityTypesDictionary[currentAbility].GetCastingTime();
+        abilityNameText.text = abilityTypesDictionary[currentAbility].GetAbilityName();
+        manaCost = abilityTypesDictionary[currentAbility].GetManaCost();
 
         if (ability.GetCastingTime() <= 0)
         {
@@ -144,19 +181,23 @@ public class AbilitiesController : MonoBehaviour
     // Casting Spell:
     private void ArcaneMissileAbility()
     {
-        tickInterval = castingInterval / abilityDictionary[currentAbility].GetNumberOfCasts();
-        manaCost /= abilityDictionary[currentAbility].GetNumberOfCasts();
+        if (ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetMovementInput() == Vector2.zero)
+            isCasting = true;
+
+        tickInterval = castingInterval / abilityTypesDictionary[currentAbility].GetNumberOfCasts();
+        manaCost /= abilityTypesDictionary[currentAbility].GetNumberOfCasts();
     }
 
     // Casting Spell:
     private void FireballAbility()
     {
-
+        isCasting = true;
     }
 
     // Instant Spell:
     private void FrostLanceAbility()
     {
+        isCasting = true;
         castingParticles.SetActive(true);
         StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
         InstantiateSpell();
@@ -166,6 +207,7 @@ public class AbilitiesController : MonoBehaviour
     // Instant Spell:
     private void MageArmorAbility()
     {
+        isCasting = true;
         castingParticles.SetActive(true);
         StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
         DeductPlayersMana();
@@ -174,14 +216,17 @@ public class AbilitiesController : MonoBehaviour
     private void InstantiateSpell()
     {
         GameObject GO = Instantiate(ReferenceManager.Instance.spellPrefab, ReferenceManager.Instance.playerObject.transform.position, Quaternion.identity);
-        GO.GetComponent<SpellController>().GetTargetAndAbilityInfo(ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().GetTarget(), abilityDictionary[currentAbility]);
-        GO.GetComponent<SpriteRenderer>().sprite = abilityDictionary[currentAbility].GetAbilitySprite();
+        GO.GetComponent<SpellController>().GetTargetAndAbilityInfo(ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().GetTarget(), abilityTypesDictionary[currentAbility]);
+        GO.GetComponent<SpriteRenderer>().sprite = abilityTypesDictionary[currentAbility].GetAbilitySprite();
     }
 
     private IEnumerator ParticleCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        isCasting = false;
+
+        if (currentAbility == AbilitySO.AbilityTypes.MageArmor || currentAbility == AbilitySO.AbilityTypes.FrostLance)
+            isCasting = false;
+
         castingParticles.SetActive(false);
     }
 
@@ -189,5 +234,22 @@ public class AbilitiesController : MonoBehaviour
     {
         ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().ReduceMana(manaCost);
         ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().GetCharacterHUDController().SetMana(ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetMana());
+        
+        CheckSpellUsability();
+        SpellCooldown();
+    }
+
+    private void SpellCooldown()
+    {
+        GameObject buttonChild = abilityButtonsDictionary[currentAbility].transform.GetChild(2).gameObject;
+        GameObject cooldownChild = abilityButtonsDictionary[currentAbility].transform.GetChild(3).gameObject;
+        GameObject unusableChild = abilityButtonsDictionary[currentAbility].transform.GetChild(4).gameObject;
+
+        if (abilityTypesDictionary[currentAbility].GetCooldown() > 0 && !unusableChild.activeSelf)
+        {
+            buttonChild.GetComponent<Button>().interactable = false;
+            cooldownChild.SetActive(true);
+            cooldownChild.GetComponent<CooldownController>().ActivateCooldown(abilityTypesDictionary[currentAbility].GetCooldown());
+        }
     }
 }
