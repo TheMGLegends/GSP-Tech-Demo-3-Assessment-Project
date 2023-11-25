@@ -13,6 +13,8 @@ public class EnemyAnimationController : CharacterAnimationController
     private Vector2 movementDirection;
     private GameObject target;
 
+    public void SetMovementDirection(Vector2 movementDirection) {  this.movementDirection = movementDirection; }
+
     protected override void Start()
     {
         base.Start();
@@ -28,7 +30,8 @@ public class EnemyAnimationController : CharacterAnimationController
 
         if (target == null)
         {
-
+            SetFacingDirection(movementDirection.x);
+            animator.SetFloat("MovementY", movementDirection.y);
         }
         else
             TargetSystem(target.transform);

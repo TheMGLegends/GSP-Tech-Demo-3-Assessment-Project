@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class EnemyController : CharacterBaseController
 {
+    [SerializeField] private List<Transform> waypoints;
+    private int waypointIndex = 0;
+
     [SerializeField] private EnemyHUDController enemyHUDController;
 
     private CircleCollider2D enemyCollider;
@@ -60,6 +63,36 @@ public class EnemyController : CharacterBaseController
                 AttackAction();
             else
                 currentAttackTime = 0;
+        }
+        else
+        {
+            MoveBetweenWaypoints();
+        }
+    }
+
+    private void MoveBetweenWaypoints()
+    {
+        Vector2 direction = (waypoints[waypointIndex].position - transform.position).normalized;
+
+        animationController.SetMovementDirection(direction);
+
+        // INFO: Moves from its current position towards a position held at waypointIndex in the wayPoints list
+        transform.position = Vector2.MoveTowards(transform.position, waypoints[waypointIndex].position, movementSpeed * Time.deltaTime);
+
+        // INFO: Given that the distance between itself and the destination object is less than some amount
+        if (Mathf.Abs((transform.position - waypoints[waypointIndex].position).magnitude) < 0.1f)
+        {
+            // INFO: Given that the index is equal to the size of the list we know we've reached our last waypoint
+            if (waypointIndex == waypoints.Count - 1)
+            {
+                // INFO: Hence we reset it to 0 to move to the very first platform, creating a looping effect
+                waypointIndex = 0;
+            }
+            else
+            {
+                // INFO: Otherwise the index will be increased so that the platform can move to the next waypoint in the list
+                waypointIndex++;
+            }
         }
     }
 

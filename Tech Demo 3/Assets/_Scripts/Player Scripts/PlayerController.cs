@@ -241,12 +241,12 @@ public class PlayerController : CharacterBaseController
     private IEnumerator MeleeDamageCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        //if (target != null)
-        //    DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
+        if (target != null)
+            DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
 
         //Testing Code:
-        if (target != null)
-          DamageManager.Instance.Damage(1000, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
+        //if (target != null)
+        //  DamageManager.Instance.Damage(1000, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
     }
 
     protected override void DeathAction()

@@ -62,7 +62,6 @@ public class AbilitiesController : MonoBehaviour
         for (int i = 0; i < abilityTypesDictionary.Count; i++)
         {
             GameObject buttonChild = abilityButtonsDictionary[(AbilitySO.AbilityTypes)i].transform.GetChild(2).gameObject;
-            GameObject cooldownChild = abilityButtonsDictionary[(AbilitySO.AbilityTypes)i].transform.GetChild(3).gameObject;
             GameObject unusableChild = abilityButtonsDictionary[(AbilitySO.AbilityTypes)i].transform.GetChild(4).gameObject;
 
             if (abilityTypesDictionary[(AbilitySO.AbilityTypes)i].GetManaCost() > ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetMana())
