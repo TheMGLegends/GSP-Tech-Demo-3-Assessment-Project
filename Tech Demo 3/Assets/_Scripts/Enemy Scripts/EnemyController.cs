@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Android.Types;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class EnemyController : CharacterBaseController
     private int waypointIndex = 0;
 
     [SerializeField] private EnemyHUDController enemyHUDController;
+    [SerializeField] private AbilitySO toxicSpitAbility;
 
     private CircleCollider2D enemyCollider;
     private EnemyAnimationController enemyAnimationController;
@@ -24,6 +26,9 @@ public class EnemyController : CharacterBaseController
 
     // INFO: Attacking System:
     private float currentAttackTime;
+
+    private bool isEnraged;
+    private int numberOfAttacks;
 
     public EnemyHUDController GetEnemyHUDController() => enemyHUDController;
     public override CharacterHUDController GetCharacterHUDController() => enemyHUDController;
@@ -101,17 +106,45 @@ public class EnemyController : CharacterBaseController
         currentAttackTime += Time.deltaTime;
 
         if (currentAttackTime > normalAttackInterval)
+            numberOfAttacks++;
+
+        if (currentAttackTime > normalAttackInterval && numberOfAttacks < 3)
         {
             currentAttackTime = 0;
             animationController.ChangeAnimationState(EnemyAnimationController.RANGED_ATTACK);
             StartCoroutine(AttackCoroutine(animationController.GetAnimator().GetCurrentAnimatorStateInfo(0).length / 2));
+        }
+        else if (currentAttackTime > normalAttackInterval && numberOfAttacks >= 3)
+        {
+            currentAttackTime = 0;
+            numberOfAttacks = 0;
+            animationController.ChangeAnimationState(EnemyAnimationController.RANGED_ATTACK);
+            StartCoroutine(ToxicSpitCoroutine(animationController.GetAnimator().GetCurrentAnimatorStateInfo(0).length / 2));
         }
     }
 
     private IEnumerator AttackCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<PlayerController>(), target.GetComponent<PlayerController>().GetPlayerHUDController(), Color.yellow);
+        string returnValue = DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<PlayerController>(), target.GetComponent<PlayerController>().GetPlayerHUDController(), Color.yellow);
+
+        if (returnValue != AttackResultStrings.hasMissed)
+        {
+            if (Random.Range(0, 101) <= 50)
+            {
+                target.GetComponent<CharacterBaseController>().ReduceHealth(target.GetComponent<PlayerController>().GetPoisonDamage());
+                target.GetComponent<CharacterBaseController>().GetCharacterHUDController().SetHealth(target.GetComponent<CharacterBaseController>().GetHealth());
+            }
+        }
+    }
+
+    private IEnumerator ToxicSpitCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GameObject GO = Instantiate(ReferenceManager.Instance.spellPrefab, transform.position, Quaternion.identity);
+        GO.GetComponent<SpellController>().GatherInfo(gameObject, ReferenceManager.Instance.playerObject, toxicSpitAbility);
+        GO.GetComponent<SpriteRenderer>().sprite = toxicSpitAbility.GetAbilitySprite();
+        GO.GetComponent<SpriteRenderer>().color = Color.green;
     }
 
     protected override void DeathAction()
@@ -146,5 +179,17 @@ public class EnemyController : CharacterBaseController
         enemyAnimationController.GetAnimator().SetFloat("MovementY", 0);
 
         characterAnimationController.ChangeAnimationState(EnemyAnimationController.IDLE);
+    }
+
+    public override void ReduceHealth(float damage)
+    {
+        base.ReduceHealth(damage);
+
+        if (!isEnraged && health < characterStats.GetBaseHealth() * 0.2)
+        {
+            spriteRenderer.color = Color.red;
+            normalDamageAmount *= 2;
+            isEnraged = true;
+        }
     }
 }

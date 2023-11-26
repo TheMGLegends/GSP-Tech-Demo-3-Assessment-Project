@@ -30,7 +30,7 @@ public class SpellController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag(target.tag))
+        if (collision.gameObject == target)
         {
             if (target.CompareTag("Enemy"))
             {

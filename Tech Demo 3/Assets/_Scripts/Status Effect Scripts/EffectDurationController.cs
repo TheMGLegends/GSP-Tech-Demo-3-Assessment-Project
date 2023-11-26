@@ -134,7 +134,7 @@ public class EffectDurationController : MonoBehaviour
         if (hitOrCrit == AttackResultStrings.hasCrit)
             damage *= 2;
 
-        affectedEntity.GetComponent<CharacterBaseController>().GetCharacterHUDController().SetHealth(affectedEntity.GetComponent<CharacterBaseController>().GetHealth());
         affectedEntity.GetComponent<CharacterBaseController>().ReduceHealth(damage);
+        affectedEntity.GetComponent<CharacterBaseController>().GetCharacterHUDController().SetHealth(affectedEntity.GetComponent<CharacterBaseController>().GetHealth());
     }
 }

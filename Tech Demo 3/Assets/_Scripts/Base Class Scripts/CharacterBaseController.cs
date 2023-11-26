@@ -59,7 +59,7 @@ public class CharacterBaseController : MonoBehaviour
         normalAttackInterval = characterStats.GetNormalAttackSpeed();
     }
 
-    public void ReduceHealth(float damage)
+    public virtual void ReduceHealth(float damage)
     {
         health -= damage;
 

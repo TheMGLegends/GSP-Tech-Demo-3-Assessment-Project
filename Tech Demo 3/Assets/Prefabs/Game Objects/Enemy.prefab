@@ -369,6 +369,7 @@ MonoBehaviour:
   - {fileID: 3530835712052623427}
   - {fileID: 4539579500419866365}
   enemyHUDController: {fileID: 0}
+  toxicSpitAbility: {fileID: 11400000, guid: 775bdc80e0812634cb43d5dc189ba60f, type: 2}
 --- !u!114 &5166045844329270441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,6 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23087f14da35d89449479fe0eb5fec3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  charactersEffectsPanel: {fileID: 0}
 --- !u!1 &7619780936505079409
 GameObject:
   m_ObjectHideFlags: 0

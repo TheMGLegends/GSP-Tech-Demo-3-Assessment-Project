@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityType: 4
   abilityName: 
-  abilitySprite: {fileID: 0}
+  abilitySprite: {fileID: -2413806693520163455, guid: 76459e6dad726aa45aa1a7c80927f7aa, type: 3}
   manaCost: 0
   castingTime: 2.5
   basePower: 0
