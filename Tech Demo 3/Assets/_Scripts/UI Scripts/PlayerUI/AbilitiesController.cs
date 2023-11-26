@@ -29,7 +29,11 @@ public class AbilitiesController : MonoBehaviour
     private bool isCasting;
     private GameObject castingParticles;
 
+    private bool freeCast = false;
+
     public bool GetIsCasting() => isCasting;
+    public bool GetFreeCast() => freeCast;
+    public void SetFreeCast(bool isFree) {  freeCast = isFree; }
 
     private void Start()
     {
@@ -149,7 +153,14 @@ public class AbilitiesController : MonoBehaviour
         currentCastingTime = 0;
         castingInterval = abilityTypesDictionary[currentAbility].GetCastingTime();
         abilityNameText.text = abilityTypesDictionary[currentAbility].GetAbilityName();
-        manaCost = abilityTypesDictionary[currentAbility].GetManaCost();
+
+        if (!freeCast)
+            manaCost = abilityTypesDictionary[currentAbility].GetManaCost();
+        else
+        {
+            manaCost = 0;
+            freeCast = false;
+        }
 
         if (ability.GetCastingTime() <= 0)
         {
@@ -210,7 +221,7 @@ public class AbilitiesController : MonoBehaviour
         castingParticles.SetActive(true);
         StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
         DeductPlayersMana();
-        ReferenceManager.Instance.playerObject.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityTypesDictionary[currentAbility]);
+        ReferenceManager.Instance.playerObject.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityTypesDictionary[currentAbility], null);
     }
 
     private void InstantiateSpell()

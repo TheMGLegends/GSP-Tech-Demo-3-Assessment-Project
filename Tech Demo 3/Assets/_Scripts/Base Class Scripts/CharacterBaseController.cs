@@ -37,6 +37,7 @@ public class CharacterBaseController : MonoBehaviour
     public void SetTarget(GameObject target) { this.target = target; }
     public void SetCanAttack(bool canAttack) { this.canAttack = canAttack; }
     public void SetMovementSpeed(float movementSpeed) {  this.movementSpeed = movementSpeed; }
+    public void SetDefenseMultiplier(float defenseMultiplier) { this.defenseMultiplier = defenseMultiplier; }
 
     private void Awake()
     {

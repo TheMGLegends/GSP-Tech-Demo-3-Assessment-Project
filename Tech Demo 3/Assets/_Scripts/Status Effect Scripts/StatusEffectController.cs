@@ -13,7 +13,13 @@ public class StatusEffectController : MonoBehaviour
 
     private AbilitySO usedSpellInfo;
 
-    private readonly int maxFrostLanceStack = 3;
+    private readonly int maxFrostLanceStack = 5;
+    private int currentFrostLanceStack;
+    private float slownessPercentage;
+
+    private string hitOrCrit;
+
+    public int GetCurrentFrostLanceStack() => currentFrostLanceStack;
 
     private void Start()
     {
@@ -29,39 +35,48 @@ public class StatusEffectController : MonoBehaviour
     {
         for (int i = 0; i < effectsList.Count; i++)
         {
+            if (currentFrostLanceStack == 0 && usedSpellInfo.GetStatusEffect().GetStatusEffectType() == StatusEffectSO.StatusEffectTypes.FrostLanceEffect)
+                currentFrostLanceStack++;
+
             if (usedSpellInfo.GetStatusEffect() == effectsList[i].GetComponent<EffectDurationController>().GetStatusEffect())
             {
                 if (effectsList[i].GetComponent<EffectDurationController>().GetStatusEffect().GetStatusEffectType() == StatusEffectSO.StatusEffectTypes.FrostLanceEffect)
                 {
-                    if (effectsList[i].GetComponent<EffectDurationController>().GetCurrentFrostLanceStack() < maxFrostLanceStack)
-                        effectsList[i].GetComponent<EffectDurationController>().IncrementFrostLanceStack();
-                    else if (effectsList[i].GetComponent<EffectDurationController>().GetCurrentFrostLanceStack() >= maxFrostLanceStack)
+                    if (currentFrostLanceStack < maxFrostLanceStack)
+                    {
+                        currentFrostLanceStack++;
+                        slownessPercentage = 0.15f * currentFrostLanceStack;
+                        effectsList[i].GetComponent<EffectDurationController>().SetEffectDuration(usedSpellInfo.GetStatusEffect().GetDuration());
+                        effectsList[i].GetComponent<EffectDurationController>().FrostLanceTargetEffect(slownessPercentage);
+                    }
+                    
+                    if (currentFrostLanceStack == maxFrostLanceStack)
                     {
                         GameObject GO = effectsList[i];
                         Destroy(GO);
                         effectsList.Remove(GO);
                         gameObject.GetComponent<CharacterBaseController>().SetMovementSpeed(gameObject.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseMovementSpeed());
-                    } 
-                    else if (effectsList[i].GetComponent<EffectDurationController>().GetCurrentFrostLanceStack() == 0)
-                        continue;
+                        slownessPercentage = 0;
+                        currentFrostLanceStack = 0;
+                    }
                 }
                 return;
             }
         }
-
         ApplyStatusEffect();
     }
 
     private void ApplyStatusEffect()
     {
         GameObject GO = Instantiate(statusEffectPrefab, charactersEffectsPanel.transform);
-        GO.GetComponent<EffectDurationController>().SetEffectDurationInfo(usedSpellInfo.GetStatusEffect(), this);
+        GO.GetComponent<EffectDurationController>().SetEffectDurationInfo(usedSpellInfo.GetStatusEffect(), this, hitOrCrit);
         effectsList.Add(GO);
     }
 
-    public void StatusEffectInfoGathering(AbilitySO usedSpellInfo)
+    public void StatusEffectInfoGathering(AbilitySO usedSpellInfo, string hitOrCrit)
     {
         this.usedSpellInfo = usedSpellInfo;
+        this.hitOrCrit = hitOrCrit;
 
         CheckActiveEffects();
     }
@@ -91,17 +106,5 @@ public class StatusEffectController : MonoBehaviour
     public void RemoveGOFromList(GameObject objectToRemove)
     {
         effectsList.Remove(objectToRemove);
-    }
-
-    public int SearchEffectsList(StatusEffectSO.StatusEffectTypes effectType)
-    {
-        for (int i = 0; i < effectsList.Count; i++)
-        {
-            if (effectsList[i].GetComponent<EffectDurationController>().GetStatusEffect().GetStatusEffectType() == effectType)
-            {
-                return effectsList[i].GetComponent<EffectDurationController>().GetCurrentFrostLanceStack();
-            }
-        }
-        return 0;
     }
 }

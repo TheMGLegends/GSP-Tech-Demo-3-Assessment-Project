@@ -32,10 +32,15 @@ public class PlayerController : CharacterBaseController
     // INFO: Animation Controller:
     private PlayerAnimationController animationController;
 
+    // INFO: Poison Damage:
+    private int poisonDamage;
+
     public Vector2 GetMovementInput() => movementInput;
     public PlayerHUDController GetPlayerHUDController() => playerHUDController;
     public override CharacterHUDController GetCharacterHUDController() => playerHUDController;
     public float GetMana() => mana;
+    public void SetManaRegen(float manaRegen) { this.manaRegen =  manaRegen; }
+    public void SetPoisonDamage(int poisonDamage) {  this.poisonDamage = poisonDamage; }
 
     private void OnDrawGizmos()
     {

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,16 +12,20 @@ public class EffectDurationController : MonoBehaviour
     private StatusEffectSO statusEffect;
     private StatusEffectController affectedEntity;
 
-    private int currentFrostLanceStack;
-    private float slownessPercentage;
-
     private Image statusEffectVisual;
     private TMP_Text effectDurationText;
     private Image backgroundColor;
     private float effectDuration;
 
+    private string hitOrCrit;
+
+    private bool usedMOB;
+    private int appliedTimes;
+    private readonly int timesToApply = 5;
+
     public StatusEffectSO GetStatusEffect() => statusEffect;
-    public int GetCurrentFrostLanceStack() => currentFrostLanceStack;
+
+    public void SetEffectDuration(float effectDuration) { this.effectDuration = effectDuration; }
 
     private void Awake()
     {
@@ -28,10 +34,11 @@ public class EffectDurationController : MonoBehaviour
         backgroundColor = transform.GetChild(1).GetComponent<Image>();
     }
 
-    public void SetEffectDurationInfo(StatusEffectSO statusEffect, StatusEffectController affectedEntity) 
+    public void SetEffectDurationInfo(StatusEffectSO statusEffect, StatusEffectController affectedEntity, string hitOrCrit) 
     { 
         this.statusEffect = statusEffect; 
         this.affectedEntity = affectedEntity;
+        this.hitOrCrit = hitOrCrit;
 
         effectDuration = this.statusEffect.GetDuration();
         statusEffectVisual.sprite = this.statusEffect.GetImage();
@@ -42,21 +49,16 @@ public class EffectDurationController : MonoBehaviour
         else
             backgroundColor.color = Color.green;
 
+        if (this.statusEffect.GetStatusEffectType() == StatusEffectSO.StatusEffectTypes.FireballEffect)
+            StartCoroutine(DamageOverTime(0));
+
         InvokeRepeating(nameof(DurationRemaining), 0, Time.deltaTime);
     }
 
-    public void IncrementFrostLanceStack() 
+    public void FrostLanceTargetEffect(float slowness) 
     { 
-        currentFrostLanceStack++;
-
-        if (statusEffect.GetStatusEffectType() == StatusEffectSO.StatusEffectTypes.FrostLanceEffect)
-        {
-            effectDuration = statusEffect.GetDuration();
-            slownessPercentage += 0.15f;
-
-            float newMovement = affectedEntity.gameObject.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseMovementSpeed() * (1 - slownessPercentage);
-            affectedEntity.GetComponent<CharacterBaseController>().SetMovementSpeed(newMovement);
-        }
+        float newMovement = affectedEntity.gameObject.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseMovementSpeed() * (1 - slowness);
+        affectedEntity.GetComponent<CharacterBaseController>().SetMovementSpeed(newMovement);
     }
 
     private void DurationRemaining()
@@ -64,32 +66,68 @@ public class EffectDurationController : MonoBehaviour
         effectDuration -= Time.deltaTime;
         effectDurationText.text = effectDuration.ToString("F1");
 
+        switch (statusEffect.GetStatusEffectType())
+        {
+            case StatusEffectSO.StatusEffectTypes.ArcaneMissileEffect:
+                if (!GameObject.FindFirstObjectByType<AbilitiesController>().GetFreeCast() && !usedMOB)
+                {
+                    GameObject.FindFirstObjectByType<AbilitiesController>().SetFreeCast(true);
+                    usedMOB = true;
+                }
+                break;
+            case StatusEffectSO.StatusEffectTypes.MageArmorEffect:
+                affectedEntity.GetComponent<CharacterBaseController>().SetDefenseMultiplier(0.65f);
+                affectedEntity.GetComponent<PlayerController>().SetManaRegen(25);
+                break;
+            case StatusEffectSO.StatusEffectTypes.ToxicSpitEffect:
+                affectedEntity.GetComponent<PlayerController>().SetPoisonDamage(20);
+                break;
+        }
+
         if (effectDuration <= 0)
         {
             affectedEntity.RemoveGOFromList(gameObject);
 
-            // LEFT OFF HERE:
             switch (statusEffect.GetStatusEffectType())
             {
-                case StatusEffectSO.StatusEffectTypes.ArcaneMissileEffect:
+                case StatusEffectSO.StatusEffectTypes.FrostLanceEffect:
+                    affectedEntity.GetComponent<CharacterBaseController>().SetMovementSpeed(affectedEntity.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseMovementSpeed());
                     break;
                 case StatusEffectSO.StatusEffectTypes.FireballEffect:
-                    break;
-                case StatusEffectSO.StatusEffectTypes.FrostLanceEffect:
+                    FireballDOT();
                     break;
                 case StatusEffectSO.StatusEffectTypes.MageArmorEffect:
+                    affectedEntity.GetComponent<CharacterBaseController>().SetDefenseMultiplier(affectedEntity.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseDefenseMultiplier());
+                    affectedEntity.GetComponent<PlayerController>().SetManaRegen(affectedEntity.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseManaRegen());
                     break;
                 case StatusEffectSO.StatusEffectTypes.ToxicSpitEffect:
-                    break;
-                default:
+                    affectedEntity.GetComponent<PlayerController>().SetPoisonDamage(10);
                     break;
             }
-
-            if (statusEffect.GetStatusEffectType() == StatusEffectSO.StatusEffectTypes.FrostLanceEffect)
-                affectedEntity.GetComponent<CharacterBaseController>().SetMovementSpeed(affectedEntity.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseMovementSpeed());
 
             CancelInvoke(nameof(DurationRemaining));
             Destroy(gameObject);
         }
+    }
+
+    private IEnumerator DamageOverTime(float delay)
+    {
+        while (appliedTimes < timesToApply)
+        {
+            FireballDOT();
+            yield return new WaitForSeconds(3);
+            appliedTimes++;
+        }
+    }
+
+    private void FireballDOT()
+    {
+        int damage = 4;
+
+        if (hitOrCrit == AttackResultStrings.hasCrit)
+            damage *= 2;
+
+        affectedEntity.GetComponent<CharacterBaseController>().GetCharacterHUDController().SetHealth(affectedEntity.GetComponent<CharacterBaseController>().GetHealth());
+        affectedEntity.GetComponent<CharacterBaseController>().ReduceHealth(damage);
     }
 }

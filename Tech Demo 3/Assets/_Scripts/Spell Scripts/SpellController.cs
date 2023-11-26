@@ -9,7 +9,7 @@ public class SpellController : MonoBehaviour
     private GameObject target;
     private AbilitySO abilityInfo;
 
-    private float spellSpeed = 5f;
+    private readonly float spellSpeed = 5f;
 
     private Color floatingNumberColor;
 
@@ -41,16 +41,10 @@ public class SpellController : MonoBehaviour
                 floatingNumberColor = Color.yellow;
             }
 
-            int frostLanceStack = 0;
-
-            if (abilityInfo.GetAbilityType() == AbilitySO.AbilityTypes.FrostLance)
-                frostLanceStack = target.GetComponent<StatusEffectController>().SearchEffectsList(StatusEffectSO.StatusEffectTypes.FrostLanceEffect) + 2;
-
-
             if (!target.GetComponent<CharacterBaseController>().GetIsDead())
             {
-                if (frostLanceStack > 4)
-                    spellResult = DamageManager.Instance.Damage(abilityInfo.GetBasePower() + 20, target.GetComponent<CharacterBaseController>(), target.GetComponent<CharacterBaseController>().GetCharacterHUDController(), floatingNumberColor);
+                if (target.GetComponent<StatusEffectController>().GetCurrentFrostLanceStack() > 3 && abilityInfo.GetAbilityType() == AbilitySO.AbilityTypes.FrostLance)
+                    DamageManager.Instance.Damage(abilityInfo.GetBasePower() + 20, target.GetComponent<CharacterBaseController>(), target.GetComponent<CharacterBaseController>().GetCharacterHUDController(), floatingNumberColor);
                 else
                     spellResult = DamageManager.Instance.Damage(abilityInfo.GetBasePower(), target.GetComponent<CharacterBaseController>(), target.GetComponent<CharacterBaseController>().GetCharacterHUDController(), floatingNumberColor);
 
@@ -68,16 +62,16 @@ public class SpellController : MonoBehaviour
         {
             case AbilitySO.AbilityTypes.ArcaneMissile:
                 if (spellResult == AttackResultStrings.hasCrit)
-                    caster.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo);
+                    caster.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo, spellResult);
                 break;
             case AbilitySO.AbilityTypes.Fireball:
-                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo);
+                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo, spellResult);
                 break;
             case AbilitySO.AbilityTypes.FrostLance:
-                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo);
+                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo, spellResult);
                 break;
             case AbilitySO.AbilityTypes.ToxicSpit:
-                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo);
+                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo, spellResult);
                 break;
         }
     }
