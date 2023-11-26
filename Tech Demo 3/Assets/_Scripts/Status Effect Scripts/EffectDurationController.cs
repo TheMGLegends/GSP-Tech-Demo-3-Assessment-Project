@@ -12,6 +12,8 @@ public class EffectDurationController : MonoBehaviour
     private StatusEffectSO statusEffect;
     private StatusEffectController affectedEntity;
 
+    private AbilitiesController abilitiesController;
+
     private Image statusEffectVisual;
     private TMP_Text effectDurationText;
     private Image backgroundColor;
@@ -32,6 +34,8 @@ public class EffectDurationController : MonoBehaviour
         statusEffectVisual = transform.GetChild(2).GetComponent<Image>();
         effectDurationText = transform.GetChild(3).GetComponent<TMP_Text>();
         backgroundColor = transform.GetChild(1).GetComponent<Image>();
+
+        abilitiesController = FindFirstObjectByType<AbilitiesController>();
     }
 
     public void SetEffectDurationInfo(StatusEffectSO statusEffect, StatusEffectController affectedEntity, string hitOrCrit) 
@@ -69,10 +73,13 @@ public class EffectDurationController : MonoBehaviour
         switch (statusEffect.GetStatusEffectType())
         {
             case StatusEffectSO.StatusEffectTypes.ArcaneMissileEffect:
-                if (!GameObject.FindFirstObjectByType<AbilitiesController>().GetFreeCast() && !usedMOB)
+                if (abilitiesController != null)
                 {
-                    GameObject.FindFirstObjectByType<AbilitiesController>().SetFreeCast(true);
-                    usedMOB = true;
+                    if (!abilitiesController.GetFreeCast() && !usedMOB)
+                    {
+                        abilitiesController.SetFreeCast(true);
+                        usedMOB = true;
+                    }
                 }
                 break;
             case StatusEffectSO.StatusEffectTypes.MageArmorEffect:
