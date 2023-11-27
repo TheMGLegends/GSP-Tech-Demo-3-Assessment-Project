@@ -47,7 +47,11 @@ public class DamageManager : MonoBehaviour
                 Quaternion.identity);
             
             GO.GetComponentInChildren<TextMesh>().color = textColor;
-            GO.GetComponentInChildren<TextMesh>().text = ((int)damage).ToString();
+
+            if (damage > 0)
+                GO.GetComponentInChildren<TextMesh>().text = ((int)damage).ToString();
+            else
+                GO.GetComponentInChildren<TextMesh>().text = "";
 
             targetController.ReduceHealth((int)damage);
             targetHUDController.SetHealth(targetController.GetHealth());
