@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
+/// <summary>
+/// Controls the cooldown of abilities used by the player
+/// </summary>
 public class CooldownController : MonoBehaviour
 {
     private float cooldownDuration;

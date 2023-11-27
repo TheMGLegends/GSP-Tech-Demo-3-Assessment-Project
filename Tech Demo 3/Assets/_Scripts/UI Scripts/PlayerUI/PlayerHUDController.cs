@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
-
+/// <summary>
+/// Controls things relevant to player hud only (Mana since enemies have none)
+/// </summary>
 public class PlayerHUDController : CharacterHUDController
 {
     public override void SetMana(float newMana)

@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Base class hud controller for all characters (player and enemy)
+/// </summary>
 public class CharacterHUDController : MonoBehaviour
 {
     [SerializeField] protected Slider healthSlider;

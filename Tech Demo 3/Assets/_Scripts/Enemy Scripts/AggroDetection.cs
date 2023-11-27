@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Control setting of the enemies target (player) given that they walk into the aggro range
+/// </summary>
 public class AggroDetection : MonoBehaviour
 {
     [SerializeField] private float aggroRadius;

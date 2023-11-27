@@ -1,16 +1,16 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls the duration of the status effect (Basically the length of time that the effects should be applied for)
+/// </summary>
 public class EffectDurationController : MonoBehaviour
 {
     private StatusEffectSO statusEffect;
     private StatusEffectController affectedEntity;
+    private CharacterBaseController baseController;
 
     private AbilitiesController abilitiesController;
 
@@ -47,6 +47,8 @@ public class EffectDurationController : MonoBehaviour
         this.affectedEntity = affectedEntity;
         this.hitOrCrit = hitOrCrit;
 
+        baseController = this.affectedEntity.GetComponent<CharacterBaseController>();
+
         effectDuration = this.statusEffect.GetDuration();
         statusEffectVisual.sprite = this.statusEffect.GetImage();
         effectDurationText.text = effectDuration.ToString("F1");
@@ -63,9 +65,9 @@ public class EffectDurationController : MonoBehaviour
     }
 
     public void FrostLanceTargetEffect(float slowness) 
-    { 
-        float newMovement = affectedEntity.gameObject.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseMovementSpeed() * (1 - slowness);
-        affectedEntity.GetComponent<CharacterBaseController>().SetMovementSpeed(newMovement);
+    {
+        float newMovement = baseController.GetCharacterStats().GetBaseMovementSpeed() * (1 - slowness);
+        baseController.SetMovementSpeed(newMovement);
     }
 
     private void DurationRemaining()
@@ -86,7 +88,7 @@ public class EffectDurationController : MonoBehaviour
                 }
                 break;
             case StatusEffectSO.StatusEffectTypes.MageArmorEffect:
-                affectedEntity.GetComponent<CharacterBaseController>().SetDefenseMultiplier(0.65f);
+                baseController.SetDefenseMultiplier(0.65f);
                 affectedEntity.GetComponent<PlayerController>().SetManaRegen(25);
                 break;
             case StatusEffectSO.StatusEffectTypes.ToxicSpitEffect:
@@ -101,7 +103,7 @@ public class EffectDurationController : MonoBehaviour
             switch (statusEffect.GetStatusEffectType())
             {
                 case StatusEffectSO.StatusEffectTypes.FrostLanceEffect:
-                    affectedEntity.GetComponent<CharacterBaseController>().SetMovementSpeed(affectedEntity.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseMovementSpeed());
+                    baseController.SetMovementSpeed(baseController.GetCharacterStats().GetBaseMovementSpeed());
                     affectedEntity.SetCurrentFrostLanceStack(0);
                     affectedEntity.SetSlownessPercentage(0);
                     break;
@@ -109,8 +111,8 @@ public class EffectDurationController : MonoBehaviour
                     FireballDOT();
                     break;
                 case StatusEffectSO.StatusEffectTypes.MageArmorEffect:
-                    affectedEntity.GetComponent<CharacterBaseController>().SetDefenseMultiplier(affectedEntity.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseDefenseMultiplier());
-                    affectedEntity.GetComponent<PlayerController>().SetManaRegen(affectedEntity.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseManaRegen());
+                    baseController.SetDefenseMultiplier(baseController.GetCharacterStats().GetBaseDefenseMultiplier());
+                    affectedEntity.GetComponent<PlayerController>().SetManaRegen(baseController.GetCharacterStats().GetBaseManaRegen());
                     break;
                 case StatusEffectSO.StatusEffectTypes.ToxicSpitEffect:
                     affectedEntity.GetComponent<PlayerController>().SetPoisonDamage(10);
@@ -139,7 +141,7 @@ public class EffectDurationController : MonoBehaviour
         if (hitOrCrit == AttackResultStrings.hasCrit)
             damage *= 2;
 
-        affectedEntity.GetComponent<CharacterBaseController>().ReduceHealth(damage);
-        affectedEntity.GetComponent<CharacterBaseController>().GetCharacterHUDController().SetHealth(affectedEntity.GetComponent<CharacterBaseController>().GetHealth());
+        baseController.ReduceHealth(damage);
+        baseController.GetCharacterHUDController().SetHealth(baseController.GetHealth());
     }
 }

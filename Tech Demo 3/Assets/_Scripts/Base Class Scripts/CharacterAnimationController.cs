@@ -1,7 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Base Class Character Animation Controller, holds the generic functionality and methods that
+/// both player and enemy woud use
+/// </summary>
 public class CharacterAnimationController : MonoBehaviour
 {
     protected Animator animator;

@@ -4,8 +4,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls the players abilities (Checking whether you can use a spell based on player mana,
+/// casting the spell so insantiating it - deducting players mana at the appropriate time and enabling casting particle effects whilst casting,
+/// putting spells on cooldown and marking spells as unusable when not enough mana
+/// </summary>
 public class AbilitiesController : MonoBehaviour
 {
+    private PlayerController playerController;
+    private PlayerAnimationController playerAnimationController;
+    private CharacterBaseController characterController;
+    private StatusEffectController statusEffectController;
+
     public List<AbilitySO.AbilityTypes> abilityTypesList = new();
     [SerializeField] private List<AbilitySO> abilityStatsList = new();
     [SerializeField] private Dictionary<AbilitySO.AbilityTypes, AbilitySO> abilityTypesDictionary = new();
@@ -37,6 +47,11 @@ public class AbilitiesController : MonoBehaviour
 
     private void Start()
     {
+        playerController = ReferenceManager.Instance.playerObject.GetComponent<PlayerController>();
+        playerAnimationController = ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>();
+        characterController = ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>();
+        statusEffectController = ReferenceManager.Instance.playerObject.GetComponent<StatusEffectController>();
+
         for (int i = 0; i < abilityTypesList.Count; i++)
         {
             abilityTypesDictionary.Add(abilityTypesList[i], abilityStatsList[i]);
@@ -102,14 +117,14 @@ public class AbilitiesController : MonoBehaviour
 
             if (currentAbility == AbilitySO.AbilityTypes.ArcaneMissile)
             {
-                if (ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetMovementInput() != Vector2.zero)
+                if (playerController.GetMovementInput() != Vector2.zero)
                 {
                     isCasting = false;
                     abilityNameText.text = "";
                     currentCastingTime = 0;
                     tickInterval = castingInterval / abilityTypesDictionary[currentAbility].GetNumberOfCasts();
                     castingBarSlider.value = castingBarSlider.minValue;
-                    StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
+                    StartCoroutine(ParticleCoroutine(playerAnimationController.GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
                 }
 
                 if (currentCastingTime > tickInterval)
@@ -191,7 +206,7 @@ public class AbilitiesController : MonoBehaviour
     // Casting Spell:
     private void ArcaneMissileAbility()
     {
-        if (ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetMovementInput() == Vector2.zero)
+        if (playerController.GetMovementInput() == Vector2.zero)
             isCasting = true;
 
         tickInterval = castingInterval / abilityTypesDictionary[currentAbility].GetNumberOfCasts();
@@ -209,7 +224,7 @@ public class AbilitiesController : MonoBehaviour
     {
         isCasting = true;
         castingParticles.SetActive(true);
-        StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
+        StartCoroutine(ParticleCoroutine(playerAnimationController.GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
         InstantiateSpell();
         DeductPlayersMana();
     }
@@ -219,15 +234,15 @@ public class AbilitiesController : MonoBehaviour
     {
         isCasting = true;
         castingParticles.SetActive(true);
-        StartCoroutine(ParticleCoroutine(ReferenceManager.Instance.playerObject.GetComponent<PlayerAnimationController>().GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
+        StartCoroutine(ParticleCoroutine(playerAnimationController.GetAnimator().GetCurrentAnimatorClipInfo(0).Length));
         DeductPlayersMana();
-        ReferenceManager.Instance.playerObject.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityTypesDictionary[currentAbility], null);
+        statusEffectController.StatusEffectInfoGathering(abilityTypesDictionary[currentAbility], null);
     }
 
     private void InstantiateSpell()
     {
         GameObject GO = Instantiate(ReferenceManager.Instance.spellPrefab, ReferenceManager.Instance.playerObject.transform.position, Quaternion.identity);
-        GO.GetComponent<SpellController>().GatherInfo(ReferenceManager.Instance.playerObject, ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().GetTarget(), abilityTypesDictionary[currentAbility]);
+        GO.GetComponent<SpellController>().GatherInfo(ReferenceManager.Instance.playerObject, characterController.GetTarget(), abilityTypesDictionary[currentAbility]);
         GO.GetComponent<SpriteRenderer>().sprite = abilityTypesDictionary[currentAbility].GetAbilitySprite();
     }
 
@@ -243,8 +258,8 @@ public class AbilitiesController : MonoBehaviour
 
     private void DeductPlayersMana()
     {
-        ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().ReduceMana(manaCost);
-        ReferenceManager.Instance.playerObject.GetComponent<CharacterBaseController>().GetCharacterHUDController().SetMana(ReferenceManager.Instance.playerObject.GetComponent<PlayerController>().GetMana());
+        characterController.ReduceMana(manaCost);
+        characterController.GetCharacterHUDController().SetMana(playerController.GetMana());
         
         CheckSpellUsability();
         SpellCooldown();

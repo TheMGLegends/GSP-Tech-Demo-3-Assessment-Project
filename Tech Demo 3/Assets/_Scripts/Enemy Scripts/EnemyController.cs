@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Android.Types;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Handles how the enemy moves based on whether it has a target or not
+/// Handles attacking using its default normal attack as well as its special ability toxic spit
+/// Handles what happens to the gameobject its attached to on death and after its death as well as after the players death (gets reset if not dead)
+/// </summary>
 public class EnemyController : CharacterBaseController
 {
     [SerializeField] private List<Transform> waypoints;
@@ -125,15 +128,18 @@ public class EnemyController : CharacterBaseController
 
     private IEnumerator AttackCoroutine(float delay)
     {
+        CharacterBaseController baseController = target.GetComponent<CharacterBaseController>();
+        PlayerController targetController = target.GetComponent<PlayerController>();
+
         yield return new WaitForSeconds(delay);
-        string returnValue = DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<PlayerController>(), target.GetComponent<PlayerController>().GetPlayerHUDController(), Color.yellow);
+        string returnValue = DamageManager.Instance.Damage(normalDamageAmount, targetController, targetController.GetPlayerHUDController(), Color.yellow);
 
         if (returnValue != AttackResultStrings.hasMissed)
         {
             if (Random.Range(0, 101) <= 50)
             {
-                target.GetComponent<CharacterBaseController>().ReduceHealth(target.GetComponent<PlayerController>().GetPoisonDamage());
-                target.GetComponent<CharacterBaseController>().GetCharacterHUDController().SetHealth(target.GetComponent<CharacterBaseController>().GetHealth());
+                baseController.ReduceHealth(targetController.GetPoisonDamage());
+                baseController.GetCharacterHUDController().SetHealth(baseController.GetHealth());
             }
         }
     }
@@ -143,13 +149,14 @@ public class EnemyController : CharacterBaseController
         yield return new WaitForSeconds(delay);
         GameObject GO = Instantiate(ReferenceManager.Instance.spellPrefab, transform.position, Quaternion.identity);
         GO.GetComponent<SpellController>().GatherInfo(gameObject, ReferenceManager.Instance.playerObject, toxicSpitAbility);
-        GO.GetComponent<SpriteRenderer>().sprite = toxicSpitAbility.GetAbilitySprite();
-        GO.GetComponent<SpriteRenderer>().color = Color.green;
+
+        SpriteRenderer toxicSpriteRenderer = GO.GetComponent<SpriteRenderer>();
+        toxicSpriteRenderer.sprite = toxicSpitAbility.GetAbilitySprite();
+        toxicSpriteRenderer.color = Color.green;
     }
 
     protected override void DeathAction()
     {
-        GetComponent<StatusEffectController>().RemoveAllEffects();
         enemyCollider.enabled = false;
         EnemyManager.Instance.RemoveEnemy(this);
         characterAnimationController.ChangeAnimationState(EnemyAnimationController.DEAD);
@@ -158,6 +165,7 @@ public class EnemyController : CharacterBaseController
 
     protected override void AfterDeath()
     {
+        statusEffectController.RemoveAllEffects();
         enemyHUDController.enabled = false;
 
         characterAnimationController.GetAnimator().enabled = false;

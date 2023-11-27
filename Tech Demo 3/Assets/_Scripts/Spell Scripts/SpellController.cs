@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Controls the movement of the instantiated spell to move towards its target
+/// </summary>
 public class SpellController : MonoBehaviour
 {
     private GameObject caster;
@@ -41,12 +41,15 @@ public class SpellController : MonoBehaviour
                 floatingNumberColor = Color.yellow;
             }
 
-            if (!target.GetComponent<CharacterBaseController>().GetIsDead())
+            CharacterBaseController baseController = target.GetComponent<CharacterBaseController>();
+            StatusEffectController effectController = target.GetComponent<StatusEffectController>();
+
+            if (!baseController.GetIsDead())
             {
-                if (target.GetComponent<StatusEffectController>().GetCurrentFrostLanceStack() > 3 && abilityInfo.GetAbilityType() == AbilitySO.AbilityTypes.FrostLance)
-                    DamageManager.Instance.Damage(abilityInfo.GetBasePower() + 20, target.GetComponent<CharacterBaseController>(), target.GetComponent<CharacterBaseController>().GetCharacterHUDController(), floatingNumberColor);
+                if (effectController.GetCurrentFrostLanceStack() > 3 && abilityInfo.GetAbilityType() == AbilitySO.AbilityTypes.FrostLance)
+                    DamageManager.Instance.Damage(abilityInfo.GetBasePower() + 20, baseController, baseController.GetCharacterHUDController(), floatingNumberColor);
                 else
-                    spellResult = DamageManager.Instance.Damage(abilityInfo.GetBasePower(), target.GetComponent<CharacterBaseController>(), target.GetComponent<CharacterBaseController>().GetCharacterHUDController(), floatingNumberColor);
+                    spellResult = DamageManager.Instance.Damage(abilityInfo.GetBasePower(), baseController, baseController.GetCharacterHUDController(), floatingNumberColor);
 
                 if (spellResult != AttackResultStrings.hasMissed)
                     CheckAffectedEntity();
@@ -58,6 +61,8 @@ public class SpellController : MonoBehaviour
 
     private void CheckAffectedEntity()
     {
+        StatusEffectController targetEffectController = target.GetComponent<StatusEffectController>();
+
         switch (abilityInfo.GetAbilityType())
         {
             case AbilitySO.AbilityTypes.ArcaneMissile:
@@ -65,13 +70,13 @@ public class SpellController : MonoBehaviour
                     caster.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo, spellResult);
                 break;
             case AbilitySO.AbilityTypes.Fireball:
-                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo, spellResult);
+                targetEffectController.StatusEffectInfoGathering(abilityInfo, spellResult);
                 break;
             case AbilitySO.AbilityTypes.FrostLance:
-                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo, spellResult);
+                targetEffectController.StatusEffectInfoGathering(abilityInfo, spellResult);
                 break;
             case AbilitySO.AbilityTypes.ToxicSpit:
-                    target.GetComponent<StatusEffectController>().StatusEffectInfoGathering(abilityInfo, spellResult);
+                targetEffectController.StatusEffectInfoGathering(abilityInfo, spellResult);
                 break;
         }
     }

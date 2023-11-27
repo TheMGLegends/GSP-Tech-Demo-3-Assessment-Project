@@ -1,7 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles damage dealt by the player and enemies
+/// Calculates miss, hit and crit chances and based on this deals an appropriate amount of damage
+/// by also taking into account target stats (defense) and spawning floating values to visually
+/// reflect the damage dealt
+/// </summary>
 public class DamageManager : MonoBehaviour
 {
     public static DamageManager Instance { get; private set; }

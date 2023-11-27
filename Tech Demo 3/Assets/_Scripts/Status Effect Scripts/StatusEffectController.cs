@@ -1,10 +1,9 @@
-using NUnit.Framework.Constraints;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
+/// <summary>
+/// Controls the status effects that are present on the character
+/// </summary>
 public class StatusEffectController : MonoBehaviour
 {
     [SerializeField] private GameObject charactersEffectsPanel;
@@ -37,28 +36,32 @@ public class StatusEffectController : MonoBehaviour
     {
         for (int i = 0; i < effectsList.Count; i++)
         {
+            EffectDurationController durationController = effectsList[i].GetComponent<EffectDurationController>();
+
             if (currentFrostLanceStack == 0 && usedSpellInfo.GetStatusEffect().GetStatusEffectType() == StatusEffectSO.StatusEffectTypes.FrostLanceEffect)
                 currentFrostLanceStack++;
 
-            if (usedSpellInfo.GetStatusEffect() == effectsList[i].GetComponent<EffectDurationController>().GetStatusEffect())
+            if (usedSpellInfo.GetStatusEffect() == durationController.GetStatusEffect())
             {
-                if (effectsList[i].GetComponent<EffectDurationController>().GetStatusEffect().GetStatusEffectType() == StatusEffectSO.StatusEffectTypes.FrostLanceEffect)
+                if (durationController.GetStatusEffect().GetStatusEffectType() == StatusEffectSO.StatusEffectTypes.FrostLanceEffect)
                 {
                     if (currentFrostLanceStack < maxFrostLanceStack)
                     {
                         currentFrostLanceStack++;
-                        effectsList[i].GetComponent<EffectDurationController>().SetStackText(currentFrostLanceStack);
+                        durationController.SetStackText(currentFrostLanceStack);
                         slownessPercentage = 0.15f * currentFrostLanceStack;
-                        effectsList[i].GetComponent<EffectDurationController>().SetEffectDuration(usedSpellInfo.GetStatusEffect().GetDuration());
-                        effectsList[i].GetComponent<EffectDurationController>().FrostLanceTargetEffect(slownessPercentage);
+                        durationController.SetEffectDuration(usedSpellInfo.GetStatusEffect().GetDuration());
+                        durationController.FrostLanceTargetEffect(slownessPercentage);
                     }
                     
                     if (currentFrostLanceStack == maxFrostLanceStack)
                     {
+                        CharacterBaseController baseController = GetComponent<CharacterBaseController>();
+
                         GameObject GO = effectsList[i];
                         Destroy(GO);
                         effectsList.Remove(GO);
-                        gameObject.GetComponent<CharacterBaseController>().SetMovementSpeed(gameObject.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseMovementSpeed());
+                        baseController.SetMovementSpeed(baseController.GetCharacterStats().GetBaseMovementSpeed());
                         slownessPercentage = 0;
                         currentFrostLanceStack = 0;
                     }

@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Holds references that are needed across the entire scope of the game
+/// </summary>
 public class ReferenceManager : MonoBehaviour
 {
     public static ReferenceManager Instance { get; private set; }

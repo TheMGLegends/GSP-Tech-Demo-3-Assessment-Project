@@ -2,7 +2,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
+/// <summary>
+/// Handles things unique to player object e.g. (Movement, animations, targeting, melee attacking, death and after death (what occurs - Respawns)
+/// </summary>
 public class PlayerController : CharacterBaseController
 {
     // INFO: HUD References:
@@ -33,7 +35,7 @@ public class PlayerController : CharacterBaseController
     private PlayerAnimationController animationController;
 
     // INFO: Poison Damage:
-    private float poisonDamage;
+    private float poisonDamage = 10;
 
     public Vector2 GetMovementInput() => movementInput;
     public PlayerHUDController GetPlayerHUDController() => playerHUDController;
@@ -104,12 +106,6 @@ public class PlayerController : CharacterBaseController
 
     private void Update()
     {
-        //Testing CODE:
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            DamageManager.Instance.Damage(1000, this, playerHUDController, Color.yellow);
-        }
-
         if (target != null)
         {
             if (target.GetComponent<CharacterBaseController>().GetIsDead())
@@ -257,10 +253,6 @@ public class PlayerController : CharacterBaseController
         yield return new WaitForSeconds(delay);
         if (target != null)
             DamageManager.Instance.Damage(normalDamageAmount, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
-
-        //Testing Code:
-        //if (target != null)
-        //  DamageManager.Instance.Damage(1000, target.GetComponent<EnemyController>(), target.GetComponent<EnemyController>().GetEnemyHUDController(), Color.red);
     }
 
     protected override void DeathAction()

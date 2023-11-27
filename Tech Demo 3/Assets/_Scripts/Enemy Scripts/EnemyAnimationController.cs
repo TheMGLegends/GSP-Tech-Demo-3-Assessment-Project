@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Holds animation controller functionality exclusive to the enemy e.g. (Enemy animation states)
+/// </summary>
 public class EnemyAnimationController : CharacterAnimationController
 {
     public const string IDLE = "Idle";

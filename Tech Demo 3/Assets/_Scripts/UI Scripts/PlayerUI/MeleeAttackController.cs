@@ -1,8 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls the auto attack melee UI for the player
+/// </summary>
 public class MeleeAttackController : MonoBehaviour
 {
     [SerializeField] private Image outsideRangeImage;

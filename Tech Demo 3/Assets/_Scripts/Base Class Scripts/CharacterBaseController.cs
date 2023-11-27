@@ -1,10 +1,9 @@
-using NUnit.Framework.Internal;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Character base class controller that holds generic functionality that both player
+/// and enemy require such as health stats, movement speed, dead state etc.
+/// </summary>
 public class CharacterBaseController : MonoBehaviour
 {
     [SerializeField] protected CharacterStatsSO characterStats;
@@ -22,6 +21,7 @@ public class CharacterBaseController : MonoBehaviour
 
     protected CharacterAnimationController characterAnimationController;
     protected CharacterHUDController characterHUDController;
+    protected StatusEffectController statusEffectController;
 
     protected GameObject target;
 
@@ -48,6 +48,7 @@ public class CharacterBaseController : MonoBehaviour
     {
         startingPosition = transform.position;
         characterAnimationController = GetComponent<CharacterAnimationController>();
+        statusEffectController = GetComponent<StatusEffectController>();
     }
 
     protected virtual void InitializeStats()

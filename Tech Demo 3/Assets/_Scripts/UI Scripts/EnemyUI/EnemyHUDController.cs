@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
+/// <summary>
+/// Displays the corresponding enemies profile e.g. (Health, status effects etc.)
+/// </summary>
 public class EnemyHUDController : CharacterHUDController
 {
     private void Start()

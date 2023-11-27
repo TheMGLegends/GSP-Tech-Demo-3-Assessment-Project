@@ -1,6 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles animations exclusive to player e.g. (Melee ready/swing etc.)
+/// </summary>
 public class PlayerAnimationController : CharacterAnimationController
 {
     public const string IDLE = "Idle";

@@ -1,8 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Manages all the enemies present in the scene by putting them in an enemies list
+/// if they die they get removed from this list
+/// </summary>
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance { get; private set; }
