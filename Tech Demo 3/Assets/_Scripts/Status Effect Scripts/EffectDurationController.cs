@@ -17,6 +17,7 @@ public class EffectDurationController : MonoBehaviour
     private Image statusEffectVisual;
     private TMP_Text effectDurationText;
     private Image backgroundColor;
+    private TMP_Text stackText;
     private float effectDuration;
 
     private string hitOrCrit;
@@ -28,12 +29,14 @@ public class EffectDurationController : MonoBehaviour
     public StatusEffectSO GetStatusEffect() => statusEffect;
 
     public void SetEffectDuration(float effectDuration) { this.effectDuration = effectDuration; }
+    public void SetStackText(int stack) { stackText.text = stack.ToString(); }
 
     private void Awake()
     {
         statusEffectVisual = transform.GetChild(2).GetComponent<Image>();
         effectDurationText = transform.GetChild(3).GetComponent<TMP_Text>();
         backgroundColor = transform.GetChild(1).GetComponent<Image>();
+        stackText = transform.GetChild(4).GetComponent<TMP_Text>();
 
         abilitiesController = FindFirstObjectByType<AbilitiesController>();
     }
@@ -99,6 +102,8 @@ public class EffectDurationController : MonoBehaviour
             {
                 case StatusEffectSO.StatusEffectTypes.FrostLanceEffect:
                     affectedEntity.GetComponent<CharacterBaseController>().SetMovementSpeed(affectedEntity.GetComponent<CharacterBaseController>().GetCharacterStats().GetBaseMovementSpeed());
+                    affectedEntity.SetCurrentFrostLanceStack(0);
+                    affectedEntity.SetSlownessPercentage(0);
                     break;
                 case StatusEffectSO.StatusEffectTypes.FireballEffect:
                     FireballDOT();

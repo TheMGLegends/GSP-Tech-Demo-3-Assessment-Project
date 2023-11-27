@@ -266,6 +266,7 @@ public class PlayerController : CharacterBaseController
     protected override void DeathAction()
     {
         playerCollider.enabled = false;
+        GetComponent<StatusEffectController>().RemoveAllEffects();
         DisableUI();
         characterAnimationController.ChangeAnimationState(PlayerAnimationController.DEAD);
         rb2D.velocity = Vector2.zero;

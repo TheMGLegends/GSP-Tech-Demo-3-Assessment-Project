@@ -20,6 +20,8 @@ public class StatusEffectController : MonoBehaviour
     private string hitOrCrit;
 
     public int GetCurrentFrostLanceStack() => currentFrostLanceStack;
+    public void SetSlownessPercentage(float slownessPercentage) { this.slownessPercentage =  slownessPercentage; }
+    public void SetCurrentFrostLanceStack(int currentFrostLanceStack) { this.currentFrostLanceStack = currentFrostLanceStack; }
 
     private void Start()
     {
@@ -45,6 +47,7 @@ public class StatusEffectController : MonoBehaviour
                     if (currentFrostLanceStack < maxFrostLanceStack)
                     {
                         currentFrostLanceStack++;
+                        effectsList[i].GetComponent<EffectDurationController>().SetStackText(currentFrostLanceStack);
                         slownessPercentage = 0.15f * currentFrostLanceStack;
                         effectsList[i].GetComponent<EffectDurationController>().SetEffectDuration(usedSpellInfo.GetStatusEffect().GetDuration());
                         effectsList[i].GetComponent<EffectDurationController>().FrostLanceTargetEffect(slownessPercentage);
@@ -106,5 +109,15 @@ public class StatusEffectController : MonoBehaviour
     public void RemoveGOFromList(GameObject objectToRemove)
     {
         effectsList.Remove(objectToRemove);
+    }
+
+    public void RemoveAllEffects()
+    {
+        for (int i = 0; i < effectsList.Count; i++)
+        {
+            GameObject GO = effectsList[i];
+            Destroy(GO);
+            effectsList.Remove(GO);
+        }
     }
 }

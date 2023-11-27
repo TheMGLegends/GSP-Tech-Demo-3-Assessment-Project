@@ -149,6 +149,7 @@ public class EnemyController : CharacterBaseController
 
     protected override void DeathAction()
     {
+        GetComponent<StatusEffectController>().RemoveAllEffects();
         enemyCollider.enabled = false;
         EnemyManager.Instance.RemoveEnemy(this);
         characterAnimationController.ChangeAnimationState(EnemyAnimationController.DEAD);
