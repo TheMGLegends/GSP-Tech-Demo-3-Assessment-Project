@@ -1,6 +1,8 @@
 # GSP-Tech-Demo-3-Assessment-Project
 Gameplay Systems Programming 3rd Tech Demo (2D Mobile RPG Combat System)
 
+[<p align="center"><img src="https://img.youtube.com/vi/OLTB-zc04EA/hqdefault.jpg" width="400" height="400"/></p>](https://www.youtube.com/embed/OLTB-zc04EA)
+
 <p align="center">
   <a>
     <img src="ArcaneWizards.png" width="480" height = "270" alt="Arcane Wizards Gameplay Image">
